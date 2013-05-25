@@ -55,6 +55,7 @@ public class Kitchen implements Serializable {
 	private SystemUser kitchenManager;
 	private List<Menu> menus;
 	private List<Offer> offers;
+	private List<Vacancy> vacancies;
 	private BusinessProfile businessProfile;
 	private Status status;
 	private int versionId;
@@ -140,6 +141,18 @@ public class Kitchen implements Serializable {
 	public void setOffers(List<Offer> offers) {
 		this.offers = offers;
 	}
+	
+	
+	@OneToMany(mappedBy = "kitchen", fetch = FetchType.LAZY)
+	@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.TRUE)
+	public List<Vacancy> getVacancies() {
+		return vacancies;
+	}
+	public void setVacancies(List<Vacancy> vacancies) {
+		this.vacancies = vacancies;
+	}
+	
 	
 	@ManyToOne()
 	@JoinColumn(name="BUSINESS_PROFILE_ID")

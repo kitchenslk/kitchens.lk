@@ -106,7 +106,7 @@ public class Offer implements Serializable {
 
 	@ElementCollection
 	@CollectionTable(name="OFFER_TERMS", joinColumns=@JoinColumn(name="OFFER_ID"))
-	@Column(name="OFFER_TERM")
+	@Column(name="OFFER_TERM",length=5000)
 	public List<String> getOfferTerms() {
 		return offerTerms;
 	}

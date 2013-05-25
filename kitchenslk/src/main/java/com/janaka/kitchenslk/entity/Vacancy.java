@@ -64,7 +64,7 @@ public class Vacancy implements Serializable {
 	
 	
 	@Id
-	@SequenceGenerator(name = "idsequence", sequenceName = "kitchen_id", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "idsequence", sequenceName = "vacancy_id", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idsequence")
 	@Column(name = "VACANCY_ID", length = 12)
 	public long getVacancyId() {

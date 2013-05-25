@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -110,7 +111,7 @@ public class BusinessProfile implements Serializable {
 		this.businessLogo = businessLogo;
 	}
 	
-	@OneToOne()
+	@ManyToOne()
 	@JoinColumn(name="CONTACT_PERSON_ID")
 	public SystemUser getContactPerson() {
 		return contactPerson;
@@ -119,7 +120,7 @@ public class BusinessProfile implements Serializable {
 		this.contactPerson = contactPerson;
 	}
 	
-	@OneToOne()
+	@ManyToOne()
 	@JoinColumn(name="BUSINESS_OWNER_ID")
 	public SystemUser getBusinessOwner() {
 		return businessOwner;

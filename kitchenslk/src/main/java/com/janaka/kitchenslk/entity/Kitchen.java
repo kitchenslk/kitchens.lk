@@ -46,13 +46,12 @@ import com.janaka.kitchenslk.enums.Status;
 public class Kitchen implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	
-	
+		
 	private long kitchenId;
 	private String kitchenName;
 	private Address address;
-//	private List<ContactNumber> contactNumbers;
-//	private List<EmailAddress> emailAddresses;
+	private List<ContactNumberKitchen> contactNumbers;
+	private List<EmailAddressKitchen> emailAddresses;
 	private SystemUser kitchenManager;
 	private List<Menu> menus;
 	private BusinessProfile businessProfile;
@@ -90,32 +89,32 @@ public class Kitchen implements Serializable {
 		this.address = address;
 	}
 
-//	@OneToMany(mappedBy = "kitchen", fetch = FetchType.LAZY)
-//	@Cascade(org.hibernate.annotations.CascadeType.ALL)
-//	@LazyCollection(LazyCollectionOption.TRUE)
-//	public List<ContactNumber> getContactNumbers() {
-//		return contactNumbers;
-//	}
-//	public void setContactNumbers(List<ContactNumber> contactNumbers) {
-//		this.contactNumbers = contactNumbers;
-//	}
-//
-//	@OneToMany(mappedBy = "kitchen", fetch = FetchType.LAZY)
-//	@Cascade(org.hibernate.annotations.CascadeType.ALL)
-//	@LazyCollection(LazyCollectionOption.TRUE)
-//	public List<EmailAddress> getEmailAddresses() {
-//		return emailAddresses;
-//	}
-//	public void setEmailAddresses(List<EmailAddress> emailAddresses) {
-//		this.emailAddresses = emailAddresses;
-//	}
+	@OneToMany(mappedBy = "kitchen", fetch = FetchType.LAZY)
+	@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.TRUE)
+	public List<ContactNumberKitchen> getContactNumbers() {
+		return contactNumbers;
+	}
+	public void setContactNumbers(List<ContactNumberKitchen> contactNumbers) {
+		this.contactNumbers = contactNumbers;
+	}
+
+	@OneToMany(mappedBy = "kitchen", fetch = FetchType.LAZY)
+	@Cascade(org.hibernate.annotations.CascadeType.ALL)
+	@LazyCollection(LazyCollectionOption.TRUE)
+	public List<EmailAddressKitchen> getEmailAddresses() {
+		return emailAddresses;
+	}	
+	public void setEmailAddresses(List<EmailAddressKitchen> emailAddresses) {
+		this.emailAddresses = emailAddresses;
+	}
 
 	@ManyToOne()
 	@JoinColumn(name="KITCHEN_MANAGER_ID")
 	@Cascade(CascadeType.MERGE)
 	public SystemUser getKitchenManager() {
 		return kitchenManager;
-	}
+	}	
 	public void setKitchenManager(SystemUser kitchenManager) {
 		this.kitchenManager = kitchenManager;
 	}

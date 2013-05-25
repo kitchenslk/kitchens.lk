@@ -1,7 +1,6 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import com.janaka.kitchenslk.commons.CommonFunctions;
-
 
 /**
  * @author	: Nadeeshani Senevirathna
@@ -52,8 +49,8 @@ public class SystemUserDetail implements Serializable {
 	private long userDetailId;
 	private String firstName;
 	private String lastName;		
-	private List<EmailAddress> emailAddresses;
-	private List<ContactNumber> contactNumbers;
+	private List<EmailAddressSystemUser> emailAddresses;
+	private List<ContactNumberSystemUser> contactNumbers;
 	private SystemUser systemUser;
 	private int versionId;
 	private CommonDomainProperty commanDomainProperty;
@@ -93,21 +90,19 @@ public class SystemUserDetail implements Serializable {
 	@OneToMany(mappedBy = "userDetail", fetch = FetchType.LAZY)
 	@Cascade(org.hibernate.annotations.CascadeType.ALL)
 	@LazyCollection(LazyCollectionOption.TRUE)
-	public List<EmailAddress> getEmailAddresses() {
+	public List<EmailAddressSystemUser> getEmailAddresses() {
 		return emailAddresses;
 	}
-
-	public void setEmailAddresses(List<EmailAddress> emailAddresses) {
+	public void setEmailAddresses(List<EmailAddressSystemUser> emailAddresses) {
 		this.emailAddresses = emailAddresses;
 	}
 
 	@OneToMany(mappedBy = "userDetail", fetch = FetchType.LAZY)
 	@Cascade(org.hibernate.annotations.CascadeType.ALL)
-	public List<ContactNumber> getContactNumbers() {
+	public List<ContactNumberSystemUser> getContactNumbers() {
 		return contactNumbers;
 	}
-
-	public void setContactNumbers(List<ContactNumber> contactNumbers) {
+	public void setContactNumbers(List<ContactNumberSystemUser> contactNumbers) {
 		this.contactNumbers = contactNumbers;
 	}
 	
@@ -118,7 +113,8 @@ public class SystemUserDetail implements Serializable {
 	@Cascade(org.hibernate.annotations.CascadeType.ALL)
 	public SystemUser getSystemUser() {
 		return systemUser;
-	}
+	}	
+
 	public void setSystemUser(SystemUser systemUser) {
 		this.systemUser = systemUser;
 	}
@@ -164,18 +160,7 @@ public class SystemUserDetail implements Serializable {
 		return map;
 	}
 
-	public static SystemUserDetail fromSystemUser(SystemUser user) {
-		
-		return new SystemUserDetail(user);
-	}
 	
-	private SystemUserDetail(SystemUser user){
-		this.systemUser = user;
-		user.setSystemUserDetail(this);
-		this.emailAddresses = new ArrayList<EmailAddress>();
-		this.emailAddresses.add(EmailAddress.fromSystemUserDetail(user));
-		this.commanDomainProperty = CommonFunctions.getCommonDomainPropertyForSavingEntity();
-	}
 	
 	@Override
 	public int hashCode() {

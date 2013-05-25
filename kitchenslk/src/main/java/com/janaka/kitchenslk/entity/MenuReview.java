@@ -54,7 +54,7 @@ public class MenuReview extends Review implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Review) {
+		if (obj instanceof MenuReview) {
 			MenuReview other = (MenuReview) obj;
 			EqualsBuilder builder = new EqualsBuilder();
 			builder.append(this.getReviewId(), other.getReviewId());

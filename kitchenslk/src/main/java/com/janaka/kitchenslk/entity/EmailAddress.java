@@ -9,12 +9,11 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -22,8 +21,6 @@ import javax.persistence.Version;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -40,6 +37,7 @@ import com.janaka.kitchenslk.enums.PriorityStatus;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @Table(name = "EMAIL_ADDRESS", uniqueConstraints = @UniqueConstraint(columnNames = { "EMAIL_ADDRESS_VALUE" }))
+@Inheritance(strategy=InheritanceType.JOINED)
 public class EmailAddress implements Serializable {
 	
 	public EmailAddress() {
@@ -53,8 +51,7 @@ public class EmailAddress implements Serializable {
     private static final long serialVersionUID = 1L;
     
     private long emailAddressId;
-    private String emailAddressValue;
-    private SystemUserDetail systemUserDetail;
+    private String emailAddressValue;    
     private PriorityStatus emailPriorityStatus;
     private NotifyToContactStatus notifyToContactStatus;
     private int versionId;
@@ -82,16 +79,7 @@ public class EmailAddress implements Serializable {
 	this.emailAddressValue = emailAddressValue;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_DETAIL_ID", nullable = false)
-    @Cascade(CascadeType.MERGE)
-    public SystemUserDetail getUserDetail() {
-	return systemUserDetail;
-    }
-
-    public void setUserDetail(SystemUserDetail systemUserDetail) {
-	this.systemUserDetail = systemUserDetail;
-    }
+    
 
     @Enumerated(EnumType.STRING)
     @Column(name = "EMAIL_PRIORITY_STATUS")
@@ -145,7 +133,6 @@ public class EmailAddress implements Serializable {
 		this.emailPriorityStatus = PriorityStatus.PRIMARY;
 		this.commanDomainProperty = CommonFunctions.getCommonDomainPropertyForSavingEntity();
 		this.notifyToContactStatus = NotifyToContactStatus.YES;
-		this.systemUserDetail = user.getSystemUserDetail();
 	}
 	
 	

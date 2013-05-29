@@ -1,5 +1,8 @@
 <html>
 <body>
-<h2>Hello World!</h2>
+<h2>Pages</h2>
+<ul>
+	<li><a href="imageUpload.htm">File Upload</a></li>
+</ul>
 </body>
 </html>

@@ -26,7 +26,7 @@ public class FileManager {
     private String FILE_PATH_TO_RETURN = ApplicationConstants.FILE_FINDER_URL;
     private File destinationDir;
 
-    public Map<String,String> constructFile(CommonsMultipartFile file, HttpServletRequest request) {
+    public Map<String,String> constructFile(CommonsMultipartFile file, HttpServletRequest request, String uploadedFileName) {
 
     	Map<String,String> map=new HashMap<String,String>();
         byte[] bits = file.getBytes();
@@ -69,8 +69,8 @@ public class FileManager {
         new File(DESTINATION_DIR_PATH).mkdirs();
         //set the destination dir
         destinationDir = new File(DESTINATION_DIR_PATH);
-        map.put(ApplicationConstants.UPLOADED_FILE_NAME, file.getName());
-        String fileName = CommonFunctions.constructUploadedImageName(file.getName(), extension);
+        map.put(ApplicationConstants.UPLOADED_FILE_NAME, uploadedFileName);
+        String fileName = CommonFunctions.constructUploadedImageName(uploadedFileName, extension);
         map.put(ApplicationConstants.CONSTRUCTED_FILE_NAME, fileName);
         try {
             FileItem item = file.getFileItem();

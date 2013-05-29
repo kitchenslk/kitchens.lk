@@ -3,26 +3,16 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
-    <definition name="base.definition"
-        template="/WEB-INF/jsp/layouts/layout.jsp">
+    <definition name="base.definition"  template="/WEB-INF/jsp/layouts/layout.jsp">
         <put-attribute name="title" value="" />        
         <put-attribute name="body" value="" />       
     </definition>
  
-    <definition name="createNewForm" extends="base.definition">
-        <put-attribute name="title" value="Test Page" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/createNewForm.jsp" />
+    <definition name="imageUpload" extends="base.definition">
+        <put-attribute name="title" value="ImageUploade" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/imageUpload.jsp" />
     </definition>
-    
-    <definition name="listAllForms" extends="base.definition">
-        <put-attribute name="title" value="Form List" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/listAllForms.jsp" />
-    </definition>
-    
-    <definition name="editForm" extends="base.definition">
-        <put-attribute name="title" value="Edit Form" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/editForm.jsp" />
-    </definition>
+
     
     
  

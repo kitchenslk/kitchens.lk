@@ -1,7 +1,6 @@
 package com.janaka.kitchenslk.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.sound.midi.SysexMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +20,7 @@ public class SystemUserController {
 	@Autowired
 	private SystemUserService systemUserService;
 	
-	@RequestMapping(value="/test", method=RequestMethod.GET)
+	@RequestMapping(value="/imageUpload", method=RequestMethod.GET)
 	public String testPage(HttpServletRequest request){
 		try {
 			systemUserService.getSystemUserByUserName("test");
@@ -29,7 +28,9 @@ public class SystemUserController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "listAllForms";
+		return "imageUpload";
 	}
+	
+	
 
 }

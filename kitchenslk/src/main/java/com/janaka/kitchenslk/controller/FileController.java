@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,7 +48,7 @@ public class FileController {
 		try {
 			ServletContext sc = request.getSession().getServletContext();
 			String filename = null;
-			filename = ApplicationConstants.ROOT_IMAGE_FOLDER + imageName;
+			filename = ApplicationConstants.ROOT_IMAGE_FOLDER +   imageName;
 			// Get the MIME type of the image
 			String mimeType = sc.getMimeType(filename);
 			if (mimeType == null) {
@@ -132,7 +135,7 @@ public class FileController {
 			@RequestParam("pathVar") String pathVar) {
 		String fileName = "";
 		String filePath = null;
-		String constVal = ApplicationConstants.APP_URL + "/findFile?fileName=";
+		String constVal = ApplicationConstants.FILE_FINDER_URL;
 		if (!(pathVar.isEmpty())) {
 			fileName = pathVar.replace(constVal, "");
 			filePath = ApplicationConstants.DIRECTORY_ROOT + fileName;
@@ -166,8 +169,7 @@ public class FileController {
 			if (!isMultipart) {
 				System.out.println("File Not Uploaded");
 			} else {
-				Map<String, String> map = fileManager.constructFile(file,
-						request);
+				Map<String, String> map = fileManager.constructFile(file,request,file.getName());
 				UploadedFile uploadedFile = new UploadedFile(map);
 				imageURL = uploadedFile.getFileUrl();
 			}
@@ -184,5 +186,43 @@ public class FileController {
 		}
 
 	}
+	
+	
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public void uploadFile(
+    		@RequestParam("fileName") String fileName,
+    		@RequestParam("file") CommonsMultipartFile file, 
+    		HttpServletRequest request, 
+    		HttpServletResponse response) {
+	     
+      Map<String, String> resultMap=new HashMap<String, String>();
+      boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+
+      if (!isMultipart) {
+        try {
+          response.getWriter().write("File Not Uploaded");
+        } catch (IOException e) {
+          // Couldn't write the response back to the user either? Not much that can be done then.
+          e.printStackTrace();
+          return;
+        }
+      } else {
+    	  resultMap = fileManager.constructFile(file, request,fileName);
+      }
+
+      response.setContentType("text/html");
+      try {    	
+        JSONObject jsonObject=new JSONObject();       
+		jsonObject.put("filePath", resultMap.get(ApplicationConstants.PHYSICAL_FILE_PATH));		
+        jsonObject.put("fileName", resultMap.get(ApplicationConstants.UPLOADED_FILE_NAME));
+        jsonObject.put("fileUrl", resultMap.get(ApplicationConstants.FILE_URL));
+        jsonObject.put("createdFileName", resultMap.get(ApplicationConstants.CONSTRUCTED_FILE_NAME));
+        response.getWriter().write(jsonObject.toString());
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (JSONException e) {
+		e.printStackTrace();
+	}
+    }
 
 }

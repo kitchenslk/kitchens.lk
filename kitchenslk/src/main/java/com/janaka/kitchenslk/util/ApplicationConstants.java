@@ -8,11 +8,11 @@ package com.janaka.kitchenslk.util;
 
 public interface ApplicationConstants {
 	
-	String DIRECTORY_ROOT="C://kitckenslk";
+	String DIRECTORY_ROOT="C://kitckenslk//";
 	String SUCCESS = "SUCCESS";
-	String FILE_FINDER_URL = "/findFile.htm?=fileName";
-	String ROOT_IMAGE_FOLDER = "C://kitckensl/images";
-	String IMAGE_FINDER_URL = "/findImage.htm?=imageName";
+	String FILE_FINDER_URL = "findFile.htm?fileName=";
+	String ROOT_IMAGE_FOLDER = "C://kitckenslk//";
+	String IMAGE_FINDER_URL = "findFile.htm?fileName=";
 	String PHYSICAL_FILE_PATH = "PHYSICAL_FILE_PATH";
 	String CONSTRUCTED_FILE_NAME = "CONSTRUCTED_FILE_NAME";
 	String UPLOADED_FILE_NAME = "UPLOADED_FILE_NAME";

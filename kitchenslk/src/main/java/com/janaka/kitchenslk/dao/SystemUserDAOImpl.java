@@ -31,7 +31,9 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 		Criteria criteria=sessionFactory.getCurrentSession().createCriteria(SystemUser.class);
 		criteria.add(Restrictions.eq("userName", username));
 		SystemUser systemUser=(SystemUser) criteria.uniqueResult();
-		Hibernate.initialize(systemUser.getUserRoles());
+		if(!(systemUser==null)){
+			Hibernate.initialize(systemUser.getUserRoles());
+		}
 		return systemUser;
 	}
 

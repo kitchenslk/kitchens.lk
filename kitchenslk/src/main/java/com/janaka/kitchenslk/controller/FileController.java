@@ -3,9 +3,7 @@ package com.janaka.kitchenslk.controller;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.janaka.kitchenslk.entity.UploadedFile;
+import com.janaka.kitchenslk.commons.CommonFunctions;
 import com.janaka.kitchenslk.service.SystemUserService;
 import com.janaka.kitchenslk.util.ApplicationConstants;
 import com.janaka.kitchenslk.util.FileManager;
@@ -39,51 +37,46 @@ public class FileController {
 	private SystemUserService systemUserService;
 
 	private static final int BUFSIZE = 1024 * 1024;
+	
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    public void uploadFile(
+    		@RequestParam("fileName") String fileName,
+    		@RequestParam("file") CommonsMultipartFile file, 
+    		HttpServletRequest request, 
+    		HttpServletResponse response) {
+	     
+      Map<String, String> resultMap=new HashMap<String, String>();
+      boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
-	@RequestMapping(value = "findImage", method = RequestMethod.GET)
-	public void findImage(HttpServletRequest request,
-			HttpServletResponse response,
-			@RequestParam("imageName") String imageName) {
-		FileInputStream in = null;
-		try {
-			ServletContext sc = request.getSession().getServletContext();
-			String filename = null;
-			filename = ApplicationConstants.ROOT_IMAGE_FOLDER +   imageName;
-			// Get the MIME type of the image
-			String mimeType = sc.getMimeType(filename);
-			if (mimeType == null) {
-				sc.log("Could not get MIME type of " + filename);
-				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				return;
-			}
-			// Set content type
-			response.setContentType(mimeType);
-			// Set content size
-			File file = new File(filename);
-			response.setContentLength((int) file.length());
-			in = new FileInputStream(file);
-			OutputStream out = response.getOutputStream();
-			// Copy the contents of the file to the output stream
-			byte[] buf = new byte[1024];
-			int count = 0;
-			while ((count = in.read(buf)) >= 0) {
-				out.write(buf, 0, count);
-			}
-			out.close();
-		} catch (FileNotFoundException ex) {
-			System.out.println(ex);
-		} catch (Exception ex) {
-			System.out.println(ex);
-		} finally {
-			try {
-				in.close();
-			} catch (IOException ex) {
-				System.out.println(ex);
-			}
-		}
+      if (!isMultipart) {
+        try {
+          response.getWriter().write("File Not Uploaded");
+        } catch (IOException e) {
+          // Couldn't write the response back to the user either? Not much that can be done then.
+          e.printStackTrace();
+          return;
+        }
+      } else {
+    	  resultMap = fileManager.constructFile(file, request,fileName);
+      }
 
+      response.setContentType("text/html");
+      try {    	
+        JSONObject jsonObject=new JSONObject();       
+		jsonObject.put("filePath", resultMap.get(ApplicationConstants.PHYSICAL_FILE_PATH));		
+        jsonObject.put("fileName", resultMap.get(ApplicationConstants.UPLOADED_FILE_NAME));
+        jsonObject.put("fileUrl", resultMap.get(ApplicationConstants.FILE_URL));
+        jsonObject.put("createdFileName", resultMap.get(ApplicationConstants.CONSTRUCTED_FILE_NAME));
+        jsonObject.put("thumbnailPath", resultMap.get(ApplicationConstants.THUMBNAIL_PATH));
+        response.getWriter().write(jsonObject.toString());
+      } catch (IOException e) {
+        e.printStackTrace();
+      } catch (JSONException e) {
+		e.printStackTrace();
 	}
+    }
 
+	
 	@RequestMapping(value = "findFile", method = RequestMethod.GET)
 	public void findFile(HttpServletRequest request,
 			HttpServletResponse response,
@@ -91,17 +84,21 @@ public class FileController {
 		ServletOutputStream op = null;
 		try {
 			String filename = null;
-			filename = ApplicationConstants.DIRECTORY_ROOT + reqFileName;
+			
+			ServletContext context = request.getSession().getServletContext();
+			String mimeType = context.getMimeType(reqFileName);
+			System.out.println("mimetype :" + mimeType);
+			
+			Map<String,String> mimeMap=CommonFunctions.getMimemap(mimeType);
+	        String DESTINATION_DIR_PATH=mimeMap.get(ApplicationConstants.DESTINATION_DIR_PATH);
+	            
+			
+			filename = DESTINATION_DIR_PATH + reqFileName;
 			File f = new File(filename);
 			int length = 0;
-			op = response.getOutputStream();
-			ServletContext context = request.getSession().getServletContext();
-			String mimetype = context.getMimeType(filename);
-			//
-			// Set the response and go!
-			//
-			//
-			response.setContentType((mimetype != null) ? mimetype
+			op = response.getOutputStream();			
+			
+			response.setContentType((mimeType != null) ? mimeType
 					: "application/octet-stream");
 			response.setContentLength((int) f.length());
 			response.setHeader("Content-Disposition", "attachment; filename=\""
@@ -138,7 +135,15 @@ public class FileController {
 		String constVal = ApplicationConstants.FILE_FINDER_URL;
 		if (!(pathVar.isEmpty())) {
 			fileName = pathVar.replace(constVal, "");
-			filePath = ApplicationConstants.DIRECTORY_ROOT + fileName;
+			
+			ServletContext context = request.getSession().getServletContext();
+			String mimeType = context.getMimeType(fileName);
+			System.out.println("mimetype :" + mimeType);
+			
+			Map<String,String> mimeMap=CommonFunctions.getMimemap(mimeType);
+	        String DESTINATION_DIR_PATH=mimeMap.get(ApplicationConstants.DESTINATION_DIR_PATH);
+			
+			filePath = DESTINATION_DIR_PATH + fileName;
 			boolean success = (new File(filePath)).delete();
 			response.setContentType("text/html");
 			if (!success) {
@@ -158,71 +163,7 @@ public class FileController {
 		}
 	}
 
-	/** ---------------- To upload the image to the disk ------------------- **/
-	@RequestMapping(value = "/uploadImage", method = RequestMethod.POST)
-	public void uploadImage(@RequestParam("file") CommonsMultipartFile file,
-			HttpServletRequest request, HttpServletResponse response) {
-
-		String imageURL = null;
-		try {
-			boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-			if (!isMultipart) {
-				System.out.println("File Not Uploaded");
-			} else {
-				Map<String, String> map = fileManager.constructFile(file,request,file.getName());
-				UploadedFile uploadedFile = new UploadedFile(map);
-				imageURL = uploadedFile.getFileUrl();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		response.setContentType("text/html");
-
-		try {
-			response.getWriter().write(imageURL);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
 	
 	
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-    public void uploadFile(
-    		@RequestParam("fileName") String fileName,
-    		@RequestParam("file") CommonsMultipartFile file, 
-    		HttpServletRequest request, 
-    		HttpServletResponse response) {
-	     
-      Map<String, String> resultMap=new HashMap<String, String>();
-      boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-
-      if (!isMultipart) {
-        try {
-          response.getWriter().write("File Not Uploaded");
-        } catch (IOException e) {
-          // Couldn't write the response back to the user either? Not much that can be done then.
-          e.printStackTrace();
-          return;
-        }
-      } else {
-    	  resultMap = fileManager.constructFile(file, request,fileName);
-      }
-
-      response.setContentType("text/html");
-      try {    	
-        JSONObject jsonObject=new JSONObject();       
-		jsonObject.put("filePath", resultMap.get(ApplicationConstants.PHYSICAL_FILE_PATH));		
-        jsonObject.put("fileName", resultMap.get(ApplicationConstants.UPLOADED_FILE_NAME));
-        jsonObject.put("fileUrl", resultMap.get(ApplicationConstants.FILE_URL));
-        jsonObject.put("createdFileName", resultMap.get(ApplicationConstants.CONSTRUCTED_FILE_NAME));
-        response.getWriter().write(jsonObject.toString());
-      } catch (IOException e) {
-        e.printStackTrace();
-      } catch (JSONException e) {
-		e.printStackTrace();
-	}
-    }
 
 }

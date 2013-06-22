@@ -2,6 +2,7 @@ package com.janaka.kitchenslk.commons;
 
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ import com.janaka.kitchenslk.entity.SystemUser;
 import com.janaka.kitchenslk.entity.SystemUserDetail;
 import com.janaka.kitchenslk.entity.TempSystemUser;
 import com.janaka.kitchenslk.enums.Status;
+import com.janaka.kitchenslk.util.ApplicationConstants;
 import com.janaka.kitchenslk.util.DesEncrypter;
 import com.janaka.kitchenslk.util.RandomStringGenerator;
 
@@ -304,6 +306,10 @@ public class CommonFunctions {
 		StringBuffer randomString=new StringBuffer("kitchenslk_");
 		if(StringUtils.isNotEmpty(uploadedImageName)){
 			uploadedImageName=uploadedImageName.replaceAll("\\s","").trim();
+			uploadedImageName=uploadedImageName.replaceAll("\\.","_").trim();
+			if(uploadedImageName.length()>10){
+				uploadedImageName=uploadedImageName.substring(0,8);
+			}
 			randomString.append(uploadedImageName);
 			randomString.append("_");
 		}		
@@ -311,6 +317,59 @@ public class CommonFunctions {
 		randomString.append(extension);
 		System.out.println("GENERATED IMAGE NAME :" + randomString.toString());
 		return randomString.toString();
+	}
+
+	public static Map<String, String> getMimemap(String mimeType) {
+		System.out.println("mimeType :" + mimeType);
+		String DESTINATION_DIR_PATH=ApplicationConstants.DIRECTORY_ROOT;
+		String  extension = ".txt";
+		String THUMBNAIL_PATH="images/text_icon.jpg";
+		//application/vnd.openxmlformats-officedocument.spreadsheetml.sheet - xlsx
+		//application/vnd.ms-excel - xls
+		if(StringUtils.isNotEmpty(mimeType)){
+			if (mimeType.equals("text/plain")) {
+	        	DESTINATION_DIR_PATH = ApplicationConstants.ROOT_DOCUMENT_FOLDER;
+	            extension = ".txt";
+	            THUMBNAIL_PATH="images/text_icon.jpg";
+	        } else if (mimeType.equals("application/pdf")) {
+	        	DESTINATION_DIR_PATH = ApplicationConstants.ROOT_DOCUMENT_FOLDER;
+	            extension = ".pdf";
+	            THUMBNAIL_PATH="images/pdf_icon.png";
+	        } else if (mimeType.equals("application/msword")) {
+	        	DESTINATION_DIR_PATH = ApplicationConstants.ROOT_DOCUMENT_FOLDER;
+	            extension = ".doc";
+	            THUMBNAIL_PATH="images/doc_icon.png";
+	        } else if (mimeType.equals("application/vnd.openxmlformats-officedocument.wordprocessingml.document") ) {
+	        	DESTINATION_DIR_PATH = ApplicationConstants.ROOT_DOCUMENT_FOLDER;
+	            extension = ".docx";
+	            THUMBNAIL_PATH="images/doc_icon.png";
+	        } else if (mimeType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") ) {
+	        	DESTINATION_DIR_PATH = ApplicationConstants.ROOT_DOCUMENT_FOLDER;
+	            extension = ".xlsx";
+	            THUMBNAIL_PATH="images/excel-icon.jpg";
+	        }else if (mimeType.equals("application/vnd.ms-excel") ) {
+		        DESTINATION_DIR_PATH = ApplicationConstants.ROOT_DOCUMENT_FOLDER;
+		        extension = ".xls";
+		        THUMBNAIL_PATH="images/excel-icon.jpg";
+	        } else if (mimeType.equals("image/gif")) {
+	        	DESTINATION_DIR_PATH=ApplicationConstants.ROOT_IMAGE_FOLDER;        	
+	            extension = ".gif";
+	            THUMBNAIL_PATH="images/gif_icon.jpg";
+	        } else if (mimeType.equals("image/png")) {
+	        	DESTINATION_DIR_PATH=ApplicationConstants.ROOT_IMAGE_FOLDER;
+	            extension = ".png"; 
+	            THUMBNAIL_PATH="images/png_icon.jpg";
+	        } else if (mimeType.equals("image/jpeg")) {
+	        	DESTINATION_DIR_PATH=ApplicationConstants.ROOT_IMAGE_FOLDER;
+	            extension = ".jpg";
+	            THUMBNAIL_PATH="images/jpg_icon.png";
+	        }
+		}
+		Map<String,String> resultMap=new HashMap<String,String>();
+		resultMap.put(ApplicationConstants.DESTINATION_DIR_PATH, DESTINATION_DIR_PATH);
+		resultMap.put(ApplicationConstants.EXTENSION, extension);
+		resultMap.put(ApplicationConstants.THUMBNAIL_PATH, THUMBNAIL_PATH);
+		return resultMap;
 	}
 
 	

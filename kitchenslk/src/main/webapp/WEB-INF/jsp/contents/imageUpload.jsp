@@ -7,7 +7,7 @@
 		<td id="uploadedFileNode\${uniqueId}">
     				<table>
     					<tr>
-    						<td><a href="\${fileUrl}" id="imageFinderUrl\${uniqueId}"><img src="images/docIcon.png" style="height:135px;width:105px" /></a></td>
+    						<td><a href="\${fileUrl}" id="imageFinderUrl\${uniqueId}"><img src="\${thumbnailPath}" style="height:135px;width:105px" /></a></td>
     					</tr>
     					<tr>
     						<td><a href="\${fileUrl}" id="imageFinderUrlName\${uniqueId}">\${fileName}<span id="image_name\${uniqueId}"></span></a></td>
@@ -32,12 +32,13 @@
 var uploadedFileIdArray=new Array(); 
 var uniqueId=0;
 
-function uploadedFile(uniqueId, filePath, fileName,fileUrl,createdFileName) {
+function uploadedFile(uniqueId, filePath, fileName,fileUrl,createdFileName,thumbnailPath) {
     this.uniqueId=uniqueId;
     this.filePath=filePath;
     this.fileName=fileName;
     this.fileUrl=fileUrl;
     this.createdFileName=createdFileName;
+    this.thumbnailPath=thumbnailPath;
 }
       
 $(document).ready(function(){
@@ -58,7 +59,7 @@ function ajaxCallBuilt(){
         onSubmit : function(file, ext){
             if(file!=''){
                 var checkimg = file.toLowerCase();
-                if (checkimg.match(/(\.pdf|\.PDF|\.txt|\.TXT|\.rtf|\.RTF|\.jpg|\.JPG|\.png|\.PNG|\.gif|\.GIF|\.DOC|\.doc|\.DOCX|\.docx|\.JPEG)$/)){
+                if (checkimg.match(/(\.pdf|\.PDF|\.txt|\.TXT|\.rtf|\.RTF|\.jpg|\.JPG|\.png|\.PNG|\.gif|\.GIF|\.DOC|\.doc|\.DOCX|\.docx|\.JPEG|\.xls|\.XLS|\.xlsx|\.XLSX)$/)){
 					
                     
                     this.setData({ fileName: file.toLowerCase()});                 	
@@ -82,16 +83,16 @@ function ajaxCallBuilt(){
                 }
             }
         },
-        onComplete: function(file, response){ 	
-        	        	
+        onComplete: function(file, response){         	        	
         	var obj = jQuery.parseJSON(response);
         	var filePath=obj.filePath;
         	var fileName=obj.fileName;
         	var fileUrl=obj.fileUrl;
         	var createdFileName=obj.createdFileName;  
+        	var thumbnailPath=obj.thumbnailPath;
         	uniqueId=uniqueId + 1;
         	var contId="const_" + uniqueId;
-        	var uploadedFileObj=new uploadedFile(contId, filePath, fileName,fileUrl,createdFileName);        	
+        	var uploadedFileObj=new uploadedFile(contId, filePath, fileName,fileUrl,createdFileName,thumbnailPath);        	
         	$("#uploadedFileTemplate").tmpl(uploadedFileObj).appendTo("#imageUploadedAppendDiv"); 
             // enable upload button
             $('#uploadingImageLoader').hide();

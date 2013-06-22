@@ -41,6 +41,7 @@ public class UploadedFile implements Serializable {
 	private String constructedFileName;	
 	private String fileUrl;
 	private String physicalFilePath;	
+	private String thumbnailPath;
 	private int versionId;
     private CommonDomainProperty commanDomainProperty;
     
@@ -89,7 +90,16 @@ public class UploadedFile implements Serializable {
 	public void setPhysicalFilePath(String physicalFilePath) {
 		this.physicalFilePath = physicalFilePath;
 	}
-
+	
+	
+	@Column(name="THUMBNAIL_PATH")
+	public String getThumbnailPath() {
+		return thumbnailPath;
+	}
+	public void setThumbnailPath(String thumbnailPath) {
+		this.thumbnailPath = thumbnailPath;
+	}
+	
 	@Version
     @Column(name = "VERSION_ID")
     public int getVersionId() {

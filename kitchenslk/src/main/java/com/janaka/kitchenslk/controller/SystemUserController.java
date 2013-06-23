@@ -1,11 +1,7 @@
 package com.janaka.kitchenslk.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.janaka.kitchenslk.service.SystemUserService;
 
@@ -20,16 +16,7 @@ public class SystemUserController {
 	@Autowired
 	private SystemUserService systemUserService;
 	
-	@RequestMapping(value="/imageUpload", method=RequestMethod.GET)
-	public String testPage(HttpServletRequest request){
-		try {
-			systemUserService.getSystemUserByUserName("test");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return "imageUpload";
-	}
+	
 	
 	
 

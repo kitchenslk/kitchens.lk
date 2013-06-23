@@ -75,6 +75,13 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+		    <id>sonatype-oss-public</id>
+		    <url>https://oss.sonatype.org/content/groups/public/</url>
+		    <releases>
+		        <enabled>true</enabled>
+		    </releases>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -405,10 +412,33 @@
 			<scope>test</scope>
 		</dependency>
 		
+<!-- 		OpenID provider -->		
+<!-- 		Add dependency of core library -->
 		<dependency>
-		  <groupId>net.coobird</groupId>
-		  <artifactId>thumbnailator</artifactId>
-		  <version>[0.4, 0.5)</version>
+		  <groupId>org.brickred</groupId>
+		  <artifactId>socialauth</artifactId>
+		  <version>4.2</version>
+		</dependency>
+		
+<!-- 		Add Dependency for spring library if required -->
+		<dependency>
+		    <groupId>org.brickred</groupId>
+		    <artifactId>socialauth-spring</artifactId>
+		    <version>2.3</version>
+		</dependency>
+		
+<!-- 		Add Dependency for seam library if required -->
+		<dependency>
+		    <groupId>org.brickred</groupId>
+		    <artifactId>socialauth-seam</artifactId>
+		    <version>2.1</version>
+		</dependency>
+		
+<!-- Add Dependency for filter library if required -->
+		<dependency>
+		  <groupId>org.brickred</groupId>
+		  <artifactId>socialauth-filter</artifactId>
+		  <version>2.4</version>
 		</dependency>
 		
 	</dependencies>

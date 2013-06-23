@@ -3,14 +3,40 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 <tiles-definitions>
+
     <definition name="base.definition"  template="/WEB-INF/jsp/layouts/layout.jsp">
+        <put-attribute name="title" value="" />        
+        <put-attribute name="body" value="" />       
+    </definition>
+    
+    <definition name="login.definition"  template="/WEB-INF/jsp/layouts/loginLayout.jsp">
         <put-attribute name="title" value="" />        
         <put-attribute name="body" value="" />       
     </definition>
  
     <definition name="imageUpload" extends="base.definition">
-        <put-attribute name="title" value="ImageUploade" />
+        <put-attribute name="title" value="ImageUpload" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/imageUpload.jsp" />
+    </definition>
+    
+    <definition name="login" extends="login.definition">
+        <put-attribute name="title" value="Login" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/login.jsp" />
+    </definition>
+    
+    <definition name="signUp" extends="login.definition">
+        <put-attribute name="title" value="Login" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/signUp.jsp" />
+    </definition>
+    
+    <definition name="accessDenied" extends="login.definition">
+        <put-attribute name="title" value="Login" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/accessDenied.jsp" />
+    </definition>
+    
+    <definition name="authSuccess" extends="login.definition">
+        <put-attribute name="title" value="authSuccess" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/authSuccess.jsp" />
     </definition>
 
     

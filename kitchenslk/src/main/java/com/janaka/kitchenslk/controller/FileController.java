@@ -38,6 +38,12 @@ public class FileController {
 
 	private static final int BUFSIZE = 1024 * 1024;
 	
+	@RequestMapping(value="/imageUpload", method=RequestMethod.GET)
+	public String testPage(HttpServletRequest request){		
+		return "imageUpload";
+	}
+	
+	
 	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
     public void uploadFile(
     		@RequestParam("fileName") String fileName,

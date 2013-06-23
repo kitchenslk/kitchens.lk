@@ -36,12 +36,7 @@
           <a href="socialauth.htm?id=linkedin">
             <img src="images/social_icons/linkedin_icon.png" alt="Linked In" title="Linked In" border="0"/>
           </a>
-        </td>        
-        <td>
-          <a href="socialauth.htm?id=myspace">
-            <img src="images/social_icons/myspace_icon.png" alt="MySpace" title="MySpace" border="0"/>
-          </a>
-        </td>
+        </td>      
       </tr>      
     </table>
 

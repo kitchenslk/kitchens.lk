@@ -33,7 +33,7 @@
     
     <bean id="socialAuthWebController" class="org.brickred.socialauth.spring.controller.SocialAuthWebController">
         <constructor-arg value="http://localhost:8080/kitchenslk" />
-        <constructor-arg value="authsuccess.htm" />
+        <constructor-arg value="/login/authsuccess.htm" />
         <constructor-arg value="/login/accessdenied.htm" />
     </bean>
 	

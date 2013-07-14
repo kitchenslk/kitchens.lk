@@ -1,24 +1,27 @@
 package com.janaka.kitchenslk.entity;
 
-import java.beans.Transient;
 import java.io.Serializable;
+import java.util.List;
 
-import javax.persistence.AssociationOverride;
-import javax.persistence.AssociationOverrides;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -26,70 +29,62 @@ import com.janaka.kitchenslk.enums.Status;
 
 /**
  * @author	: Nadeeshani Senevirathna
- * Date/Time: May 25, 2013 - 2:02:52 PM
+ * Date/Time: Jul 13, 2013 - 10:29:21 PM
  * Project	: kitchenslk
  */
-@Entity(name = "menuItemMealSize")
+@Entity(name = "attribute")
 @DynamicInsert(value = true)
 @DynamicUpdate(value = true)
-@Table(name = "MENU_ITEM_MEAL_SIZE")
-@AssociationOverrides({
-	@AssociationOverride(name = "menuItemMealSizeId.menuItem", joinColumns = @JoinColumn(name = "MENU_ITEM_ID")),
-	@AssociationOverride(name = "menuItemMealSizeId.mealSize",	joinColumns = @JoinColumn(name = "MEAL_SIZE_ID")) 
-})
-public class MenuItemMealSize implements Serializable{
-	
+@Table(name = "ATTRIBUTE")
+public class Attribute implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	private MenuItemMealSizeId menuItemMealSizeId=new MenuItemMealSizeId();	
-	private double price;
+	
+	private long attributeId;
+	private String attributeName;
+	private String attributeDescription;
+	private List<ItemAttribute> itemAttributes;
 	private Status status;
 	private int versionId;
 	private CommonDomainProperty commanDomainProperty;
 	
-	
-	@EmbeddedId
-	public MenuItemMealSizeId getMenuItemMealSizeId() {
-		return menuItemMealSizeId;
+	@Id
+	@SequenceGenerator(name = "idsequence", sequenceName = "attribute_id", allocationSize = 1, initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idsequence")
+	@Column(name = "ATTRIBUTE_ID", length = 12)	
+	public long getAttributeId() {
+		return attributeId;
 	}
-	public void setMenuItemMealSizeId(MenuItemMealSizeId menuItemMealSizeId) {
-		this.menuItemMealSizeId = menuItemMealSizeId;
-	}
-	
-	
-	@Transient	
-	public MenuItem getMenuItem() {
-		if(!(menuItemMealSizeId==null)){
-			return menuItemMealSizeId.getMenuItem();
-		}
-		return null;
-	}
-	public void setMenuItem(MenuItem menuItem) {
-		if(!(menuItemMealSizeId==null)){
-			menuItemMealSizeId.setMenuItem(menuItem);			
-		}
-	}
-	
-	@Transient	
-	public MealSize getMealSize() {
-		if(!(menuItemMealSizeId==null)){
-			return menuItemMealSizeId.getMealSize();
-		}
-		return null;
-	}
-	public void setMealSize(MealSize mealSize) {
-		if(!(menuItemMealSizeId==null)){
-			menuItemMealSizeId.setMealSize(mealSize);
-		}
-	}
-	
-	@Column(name="PRICE")
-	public double getPrice() {
-		return price;
-	}
-	public void setPrice(double price) {
-		this.price = price;
+	public void setAttributeId(long attributeId) {
+		this.attributeId = attributeId;
 	}
 
+	@Column(name="ATTRIBUTE_NAME")
+	public String getAttributeName() {
+		return attributeName;
+	}
+	public void setAttributeName(String attributeName) {
+		this.attributeName = attributeName;
+	}
+
+	@Column(name="ATTRIBUTE_DESCRIPTION", length=5000)
+	public String getAttributeDescription() {
+		return attributeDescription;
+	}
+	public void setAttributeDescription(String attributeDescription) {
+		this.attributeDescription = attributeDescription;
+	}
+	
+	
+	@OneToMany(mappedBy="attribute")
+	@Cascade(CascadeType.SAVE_UPDATE)
+	public List<ItemAttribute> getItemAttributes() {
+		return itemAttributes;
+	}
+	public void setItemAttributes(List<ItemAttribute> itemAttributes) {
+		this.itemAttributes = itemAttributes;
+	}
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
 	public Status getStatus() {
@@ -104,6 +99,7 @@ public class MenuItemMealSize implements Serializable{
 	public int getVersionId() {
 		return versionId;
 	}
+
 	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
@@ -125,19 +121,20 @@ public class MenuItemMealSize implements Serializable{
 	@Override
 	public int hashCode() {
 		HashCodeBuilder builder = new HashCodeBuilder();
-		builder.append(this.menuItemMealSizeId);
+		builder.append(this.attributeId);
 		return builder.toHashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof MenuItemMealSize) {
-			MenuItemMealSize other = (MenuItemMealSize) obj;
+		if (obj instanceof Item) {
+			Attribute other = (Attribute) obj;
 			EqualsBuilder builder = new EqualsBuilder();
-			builder.append(this.menuItemMealSizeId, other.menuItemMealSizeId);
+			builder.append(this.attributeId, other.attributeId);
 			return builder.isEquals();
 		}
 		return false;
 	}
+
 
 }

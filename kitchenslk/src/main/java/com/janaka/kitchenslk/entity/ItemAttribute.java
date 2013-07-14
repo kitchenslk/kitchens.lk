@@ -14,10 +14,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
@@ -31,62 +32,75 @@ import com.janaka.kitchenslk.enums.Status;
 
 /**
  * @author	: Nadeeshani Senevirathna
- * Date/Time: May 25, 2013 - 1:52:58 PM
+ * Date/Time: Jul 13, 2013 - 11:00:01 PM
  * Project	: kitchenslk
  */
-@Entity(name = "mealSize")
+@Entity(name = "itemAttribute")
 @DynamicInsert(value = true)
 @DynamicUpdate(value = true)
-@Table(name = "MEAL_SIZE", uniqueConstraints = @UniqueConstraint(columnNames = "MEAL_SIZE_NAME"))
-public class MealSize implements Serializable{
+@Table(name = "ITEM_ATTRIBUTE")
+public class ItemAttribute implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private long mealSizeId;
-	private String mealSizeName;
-	private String description;	
-	private List<MenuItemMealSize> menuItemMealSizes;
+	private long itemAttributeId;
+	private Attribute attribute;
+	private Item item;
+	private String itemAttributeDescription;
+	private List<ItemAttributeValue> itemAttributeValues;	
 	private Status status;
 	private int versionId;
 	private CommonDomainProperty commanDomainProperty;
 	
-	
 	@Id
-	@SequenceGenerator(name = "idsequence", sequenceName = "meal_size_id", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "idsequence", sequenceName = "item_attribute_id", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idsequence")
-	@Column(name = "MEAL_SIZE_ID", length = 12)
-	public long getMealSizeId() {
-		return mealSizeId;
+	@Column(name = "ITEM_ATTRIBUTE_ID", length = 12)		
+	public long getItemAttributeId() {
+		return itemAttributeId;
 	}
-	public void setMealSizeId(long mealSizeId) {
-		this.mealSizeId = mealSizeId;
-	}
-
-	@Column(name="MEAL_SIZE_NAME")
-	public String getMealSizeName() {
-		return mealSizeName;
-	}
-	public void setMealSizeName(String mealSizeName) {
-		this.mealSizeName = mealSizeName;
-	}
-
-	@Column(name="DESCRIPTION",length=5000)
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setItemAttributeId(long itemAttributeId) {
+		this.itemAttributeId = itemAttributeId;
 	}
 	
-	
-	@OneToMany(mappedBy="menuItemMealSizeId.mealSize",fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@Cascade(CascadeType.SAVE_UPDATE)
-	public List<MenuItemMealSize> getMenuItemMealSizes() {
-		return menuItemMealSizes;
+	@JoinColumn(name="ATTRIBUTE_ID")
+	public Attribute getAttribute() {
+		return attribute;
 	}
-	public void setMenuItemMealSizes(List<MenuItemMealSize> menuItemMealSizes) {
-		this.menuItemMealSizes = menuItemMealSizes;
+	public void setAttribute(Attribute attribute) {
+		this.attribute = attribute;
 	}
+	
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@Cascade(CascadeType.MERGE)
+	@JoinColumn(name="ITEM_ID")
+	public Item getItem() {
+		return item;
+	}
+	public void setItem(Item item) {
+		this.item = item;
+	}
+	
+	@Column(name="ITEM_ATTRIBUTE_DESCRIPTION", length=5000)
+	public String getItemAttributeDescription() {
+		return itemAttributeDescription;
+	}
+	public void setItemAttributeDescription(String itemAttributeDescription) {
+		this.itemAttributeDescription = itemAttributeDescription;
+	}
+	
+	@OneToMany(mappedBy="itemAttribute")
+	@Cascade(value=CascadeType.SAVE_UPDATE)
+	public List<ItemAttributeValue> getItemAttributeValues() {
+		return itemAttributeValues;
+	}
+	public void setItemAttributeValues(List<ItemAttributeValue> itemAttributeValues) {
+		this.itemAttributeValues = itemAttributeValues;
+	}
+	
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
@@ -114,6 +128,7 @@ public class MealSize implements Serializable{
 	public CommonDomainProperty getCommanDomainProperty() {
 		return commanDomainProperty;
 	}
+
 	public void setCommanDomainProperty(
 			CommonDomainProperty commanDomainProperty) {
 		this.commanDomainProperty = commanDomainProperty;
@@ -122,19 +137,20 @@ public class MealSize implements Serializable{
 	@Override
 	public int hashCode() {
 		HashCodeBuilder builder = new HashCodeBuilder();
-		builder.append(this.mealSizeName);
+		builder.append(this.itemAttributeId);
 		return builder.toHashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof MealSize) {
-			MealSize other = (MealSize) obj;
+		if (obj instanceof Item) {
+			ItemAttribute other = (ItemAttribute) obj;
 			EqualsBuilder builder = new EqualsBuilder();
-			builder.append(this.mealSizeName, other.mealSizeName);
+			builder.append(this.itemAttributeId, other.itemAttributeId);
 			return builder.isEquals();
 		}
 		return false;
 	}
+	
 
 }

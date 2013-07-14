@@ -13,33 +13,48 @@
         <put-attribute name="title" value="" />        
         <put-attribute name="body" value="" />       
     </definition>
+    
+    <definition name="merchant.definition"  template="/WEB-INF/jsp/layouts/merchantLayout.jsp">
+        <put-attribute name="title" value="" />        
+        <put-attribute name="body" value="" />       
+    </definition>
  
     <definition name="imageUpload" extends="base.definition">
         <put-attribute name="title" value="ImageUpload" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/imageUpload.jsp" />
     </definition>
     
+    <!-- LOGIN AND REGISTRATION -->
     <definition name="login" extends="login.definition">
         <put-attribute name="title" value="Login" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/login.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/login.jsp" />
     </definition>
     
     <definition name="signUp" extends="login.definition">
         <put-attribute name="title" value="Login" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/signUp.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/signUp.jsp" />
     </definition>
     
     <definition name="accessDenied" extends="login.definition">
         <put-attribute name="title" value="Login" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/accessDenied.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/accessDenied.jsp" />
     </definition>
     
     <definition name="authSuccess" extends="login.definition">
         <put-attribute name="title" value="authSuccess" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/authSuccess.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/authSuccess.jsp" />
     </definition>
 
+     <!-- MERCHANT -->
+    <definition name="listItems" extends="merchant.definition">
+        <put-attribute name="title" value="Item List" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/listItems.jsp" />
+    </definition>
     
+    <definition name="addItem" extends="merchant.definition">
+        <put-attribute name="title" value="Add Item" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/addItem.jsp" />
+    </definition>
     
  
 </tiles-definitions>

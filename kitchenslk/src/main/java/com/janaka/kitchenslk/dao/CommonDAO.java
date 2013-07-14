@@ -1,5 +1,17 @@
-package com.janaka.kitchenslk.commons;
+package com.janaka.kitchenslk.dao;
 
+import java.util.List;
+
+import com.janaka.kitchenslk.enums.Status;
+
+/**
+ * @author Nadeeshani Senevirathna
+ *
+ */
+/**
+ * @author Nadeeshani Senevirathna
+ *
+ */
 @SuppressWarnings("rawtypes") 
 public interface CommonDAO {
 
@@ -58,5 +70,12 @@ public interface CommonDAO {
      *
      */
     public <Entity> Entity loadEntityById(Class classz, long id) ;
-
+    
+    
+    /**
+     * @param classz
+     * @param status
+     * @return
+     */
+    public <Entity> List<Entity> getAllEntitiesByStatus(Class classz,Status status); 
 }

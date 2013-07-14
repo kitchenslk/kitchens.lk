@@ -32,80 +32,96 @@ import com.janaka.kitchenslk.enums.Status;
 
 /**
  * @author	: Nadeeshani Senevirathna
- * Date/Time: May 25, 2013 - 1:33:54 PM
+ * Date/Time: Jul 13, 2013 - 10:37:23 PM
  * Project	: kitchenslk
  */
-@Entity(name = "menuItem")
+@Entity(name = "itemAttributeValue")
 @DynamicInsert(value = true)
 @DynamicUpdate(value = true)
-@Table(name = "MENU_ITEM")
-public class MenuItem implements Serializable {
+@Table(name = "ITEM_ATTRIBUTE_VALUE")
+public class ItemAttributeValue implements Serializable{
+	
 
 	private static final long serialVersionUID = 1L;
 	
-	private long menuItemId;
-	private String menuItemName;
-	private String menuItemDescription;
-	private List<MenuItemMealSize> menuItemMealSizes;
-	private Menu menu;
+	private int itemAttributeValueId;
+	private String value;
+	private ItemAttribute itemAttribute;
+	private ItemAttributeValue parentItemAttributeValue;
+	private List<ItemAttributeValue> itemAttributeValues;
+	private String itemAttributeValueDescription;
 	private Status status;
 	private int versionId;
 	private CommonDomainProperty commanDomainProperty;
 	
 	
 	@Id
-	@SequenceGenerator(name = "idsequence", sequenceName = "menu_item_id", allocationSize = 1, initialValue = 1)
+	@SequenceGenerator(name = "idsequence", sequenceName = "item_attribute_value_id", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idsequence")
-	@Column(name = "MENU_ITEM_ID", length = 12)
-	public long getMenuItemId() {
-		return menuItemId;
+	@Column(name = "ITEM_ATTRIBUTE_VALUE_ID", length = 12)	
+	public int getItemAttributeValueId() {
+		return itemAttributeValueId;
 	}
-	public void setMenuItemId(long menuItemId) {
-		this.menuItemId = menuItemId;
-	}
-
-	@Column(name="MENU_ITEM_NAME")
-	public String getMenuItemName() {
-		return menuItemName;
-	}
-	public void setMenuItemName(String menuItemName) {
-		this.menuItemName = menuItemName;
-	}
-
-	@Column(name="MENU_ITEM_DESCRIPTION",length=5000)
-	public String getMenuItemDescription() {
-		return menuItemDescription;
-	}
-	public void setMenuItemDescription(String menuItemDescription) {
-		this.menuItemDescription = menuItemDescription;
-	}
-
-	
-	@OneToMany(mappedBy="menuItemMealSizeId.menuItem",fetch=FetchType.LAZY,orphanRemoval=true)
-	@Cascade(CascadeType.ALL)
-	public List<MenuItemMealSize> getMenuItemMealSizes() {
-		return menuItemMealSizes;
-	}
-	public void setMenuItemMealSizes(List<MenuItemMealSize> menuItemMealSizes) {
-		this.menuItemMealSizes = menuItemMealSizes;
+	public void setItemAttributeValueId(int itemAttributeValueId) {
+		this.itemAttributeValueId = itemAttributeValueId;
 	}
 	
-	@ManyToOne()
-	@Cascade(CascadeType.MERGE)
-	@JoinColumn(name="MENU_ID", referencedColumnName="MENU_ID")
-	public Menu getMenu() {
-		return menu;
+	@Column(name="ITEM_ATTRIBUTE_VALUE_DESCRIPTION", length=5000)
+	public String getItemAttributeValueDescription() {
+		return itemAttributeValueDescription;
 	}
-	public void setMenu(Menu menu) {
-		this.menu = menu;
+	public void setItemAttributeValueDescription(
+			String itemAttributeValueDescription) {
+		this.itemAttributeValueDescription = itemAttributeValueDescription;
 	}
-
+	
+	
+	@Column(name="VALUE_TEXT")
+	public String getValue() {
+		return value;
+	}	
+	public void setValue(String value) {
+		this.value = value;
+	}
+	
+	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	@JoinColumn(name="ITEM_ATTRIBUTE_ID")
+	@Cascade(CascadeType.MERGE)	
+	public ItemAttribute getItemAttribute() {
+		return itemAttribute;
+	}
+	public void setItemAttribute(ItemAttribute itemAttribute) {
+		this.itemAttribute = itemAttribute;
+	}
+	
+	
+	@ManyToOne(optional=true, fetch=FetchType.LAZY)
+	@JoinColumn(name="PARENT_ITEM_ATTRIBUTE_VALUE_ID")
+	@Cascade(CascadeType.MERGE)	
+	public ItemAttributeValue getParentItemAttributeValue() {
+		return parentItemAttributeValue;
+	}
+	public void setParentItemAttributeValue(ItemAttributeValue parentItemAttributeValue) {
+		this.parentItemAttributeValue = parentItemAttributeValue;
+	}
+	
+	
+	
+	@OneToMany(mappedBy="parentItemAttributeValue", fetch=FetchType.LAZY)
+	@Cascade(CascadeType.SAVE_UPDATE)
+	public List<ItemAttributeValue> getItemAttributeValues() {
+		return itemAttributeValues;
+	}
+	public void setItemAttributeValues(List<ItemAttributeValue> itemAttributeValues) {
+		this.itemAttributeValues = itemAttributeValues;
+	}
+	
+	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
 	public Status getStatus() {
 		return status;
 	}
-
 	public void setStatus(Status status) {
 		this.status = status;
 	}
@@ -115,7 +131,6 @@ public class MenuItem implements Serializable {
 	public int getVersionId() {
 		return versionId;
 	}
-
 	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
@@ -137,16 +152,16 @@ public class MenuItem implements Serializable {
 	@Override
 	public int hashCode() {
 		HashCodeBuilder builder = new HashCodeBuilder();
-		builder.append(this.menuItemId);
+		builder.append(this.itemAttributeValueId);
 		return builder.toHashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof MenuItem) {
-			MenuItem other = (MenuItem) obj;
+		if (obj instanceof Item) {
+			ItemAttributeValue other = (ItemAttributeValue) obj;
 			EqualsBuilder builder = new EqualsBuilder();
-			builder.append(this.menuItemId, other.menuItemId);
+			builder.append(this.itemAttributeValueId, other.itemAttributeValueId);
 			return builder.isEquals();
 		}
 		return false;

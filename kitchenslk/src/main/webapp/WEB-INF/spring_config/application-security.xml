@@ -22,7 +22,7 @@
   		<security:intercept-url pattern="/login/**" access="permitAll"/>	
   	 
   		  			
-		<security:intercept-url pattern="/*" access="hasRole('ROLE_USER')"  />
+		<security:intercept-url pattern="/*" access="permitAll"  />
 		
 				
 		<security:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />

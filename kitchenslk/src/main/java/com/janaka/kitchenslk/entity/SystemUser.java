@@ -1,7 +1,9 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
@@ -30,8 +33,12 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import com.janaka.kitchenslk.commons.CommonFunctions;
 import com.janaka.kitchenslk.enums.Status;
+import com.janaka.kitchenslk.enums.UserRoleType;
 
 /**
  * @author	: Nadeeshani Senevirathna
@@ -42,7 +49,7 @@ import com.janaka.kitchenslk.enums.Status;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @Table(name = "SYSTEM_USER", uniqueConstraints = @UniqueConstraint(columnNames = "USER_NAME"))
-public class SystemUser implements Serializable {
+public class SystemUser implements Serializable,UserDetails{
 
 	private static final long serialVersionUID = 1L;
 	public static final String DEFAULT_PASSWORD = "123";
@@ -134,13 +141,14 @@ public class SystemUser implements Serializable {
 	
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-			@AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
+	@AttributeOverrides({
+			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
 			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
 	public CommonDomainProperty getCommonDomainProperty() {
 		return commonDomainProperty;
 	}
-
 	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
 		this.commonDomainProperty = commonDomainProperty;
 	}
@@ -178,6 +186,21 @@ public class SystemUser implements Serializable {
 
 	public SystemUser() {}
 	
+	public SystemUser(TempSystemUser tempSystemUser) {
+		this.commonDomainProperty=CommonFunctions.getCommonDomainPropertyForSavingEntity(this);
+		this.password=tempSystemUser.getTempPassword();
+		this.status=Status.ACTIVE;
+		this.tempSystemUser=tempSystemUser;
+		this.userName=tempSystemUser.getTempUserName();
+		this.setUserRoles(constructBasicUserRoles());
+	}
+
+	private Set<UserRole> constructBasicUserRoles() {
+		Set<UserRole> set=new HashSet<UserRole>();
+		set.add(new UserRole(UserRoleType.ROLE_USER));
+		return set;
+	}
+
 	@Override
 	public int hashCode() {
 		HashCodeBuilder builder = new HashCodeBuilder();
@@ -197,6 +220,54 @@ public class SystemUser implements Serializable {
             return builder.isEquals();
         }
         return false;
+	}
+
+	@Transient
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return userRoles;
+	}
+
+	@Transient
+	@Override
+	public String getUsername() {
+		return this.userName;
+	}
+
+	@Transient
+	@Override
+	public boolean isAccountNonExpired() {
+		if(this.status==Status.ACTIVE){
+			return true;
+		}
+		return false;
+	}
+
+	@Transient
+	@Override
+	public boolean isAccountNonLocked() {
+		if(this.status==Status.ACTIVE){
+			return true;
+		}
+		return false;
+	}
+
+	@Transient
+	@Override
+	public boolean isCredentialsNonExpired() {
+		if(this.status==Status.ACTIVE){
+			return true;
+		}
+		return false;
+	}
+
+	@Transient
+	@Override
+	public boolean isEnabled() {
+		if(this.status==Status.ACTIVE){
+			return true;
+		}
+		return false;
 	}
 	
 }

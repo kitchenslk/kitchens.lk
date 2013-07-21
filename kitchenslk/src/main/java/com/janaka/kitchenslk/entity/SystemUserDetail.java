@@ -1,6 +1,7 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cascade;
@@ -28,6 +30,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+
+import com.janaka.kitchenslk.commons.CommonFunctions;
 
 
 /**
@@ -39,12 +43,8 @@ import org.hibernate.annotations.LazyCollectionOption;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @Table(name = "SYSTEM_USER_DETAIL")
-public class SystemUserDetail implements Serializable {
-	
-	public SystemUserDetail() {
-		// TODO Auto-generated constructor stub
-	}
-	
+public class SystemUserDetail implements Serializable {	
+
 	private static final long serialVersionUID = 1L;
 	private long userDetailId;
 	private String firstName;
@@ -53,7 +53,39 @@ public class SystemUserDetail implements Serializable {
 	private List<ContactNumberSystemUser> contactNumbers;
 	private SystemUser systemUser;
 	private int versionId;
-	private CommonDomainProperty commanDomainProperty;
+	private CommonDomainProperty commonDomainProperty;
+	
+	public SystemUserDetail() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public SystemUserDetail(TempSystemUser tempSystemUser,	SystemUser systemUser) {
+		this.commonDomainProperty=CommonFunctions.getCommonDomainPropertyForSavingEntity(systemUser);
+		this.systemUser=systemUser;
+		if(StringUtils.isNotEmpty(tempSystemUser.getContactNumber())){
+			this.contactNumbers=constructBasicContactNumbers(tempSystemUser.getContactNumber());
+		}
+		if(StringUtils.isNotEmpty(tempSystemUser.getEmailAddress())){
+			this.emailAddresses=constructBasicEmailAddresses(tempSystemUser.getEmailAddress());
+		}
+		this.firstName=systemUser.getUsername();		
+	}
+
+	private List<EmailAddressSystemUser> constructBasicEmailAddresses(String emailAddress) {
+		if(this.emailAddresses==null){
+			this.emailAddresses=new ArrayList<EmailAddressSystemUser>();
+		} 
+		this.emailAddresses.add(new EmailAddressSystemUser(emailAddress,this));
+		return this.emailAddresses;
+	}
+
+	private List<ContactNumberSystemUser> constructBasicContactNumbers(String contactNumber) {
+		if(contactNumbers==null){
+			contactNumbers=new ArrayList<ContactNumberSystemUser>();
+		} 
+		contactNumbers.add(new ContactNumberSystemUser(contactNumber,this));
+		return contactNumbers;
+	}
 
 	@Id
 	@SequenceGenerator(name = "idsequence", sequenceName = "system_user_detail_id", allocationSize = 1, initialValue = 1)
@@ -130,15 +162,16 @@ public class SystemUserDetail implements Serializable {
 	}
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-			@AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
+	@AttributeOverrides({
+			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
 			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
-	public CommonDomainProperty getCommanDomainProperty() {
-		return commanDomainProperty;
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
 	}
-
-	public void setCommanDomainProperty(CommonDomainProperty commanDomainProperty) {
-		this.commanDomainProperty = commanDomainProperty;
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
 	}
 
 	public Map<String,Object> toSystemUserDetailMap() {		

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.janaka.kitchenslk.commons.CommonFunctions;
 import com.janaka.kitchenslk.entity.Attribute;
 import com.janaka.kitchenslk.entity.Item;
 import com.janaka.kitchenslk.entity.ItemAttribute;
@@ -23,6 +24,7 @@ import com.janaka.kitchenslk.entity.ItemAttributeValue;
 import com.janaka.kitchenslk.enums.Status;
 import com.janaka.kitchenslk.service.CommonService;
 import com.janaka.kitchenslk.service.ItemService;
+import com.janaka.kitchenslk.service.MasterService;
 import com.janaka.kitchenslk.springeditor.AttributeEditor;
 
 /**
@@ -40,10 +42,13 @@ public class ItemController {
 	@Autowired
 	private CommonService commonService;
 	
+	@Autowired
+	private MasterService masterService;
+	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(Attribute.class, new AttributeEditor(commonService));	
-		SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		SimpleDateFormat format = CommonFunctions.getGlobalSimpleDateFormat();
 		binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
 	}
 	
@@ -65,7 +70,7 @@ public class ItemController {
 	public ModelAndView getCreateItem(HttpServletRequest request){
 		ModelMap map=new ModelMap();
 		try {
-			map.put("attributes", itemService.listAllAttributes(Status.ACTIVE));
+			map.put("attributes", masterService.listAllAttributesByStatus(Status.ACTIVE));
 			map.put("item", new Item());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

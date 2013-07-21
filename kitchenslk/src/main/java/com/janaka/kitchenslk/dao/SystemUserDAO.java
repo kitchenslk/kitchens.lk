@@ -1,6 +1,7 @@
 package com.janaka.kitchenslk.dao;
 
 import com.janaka.kitchenslk.entity.SystemUser;
+import com.janaka.kitchenslk.entity.TempSystemUser;
 
 /**
  * @author	: Nadeeshani Senevirathna
@@ -15,5 +16,13 @@ public interface SystemUserDAO {
 	 * @return
 	 */
 	public SystemUser getSystemUserByUserName(String username)throws Exception;
+
+	
+	/**
+	 * @param userName
+	 * @return
+	 * @throws Exception
+	 */
+	public TempSystemUser getTempSystemUserByEncryptedUserName(String userName)throws Exception;
 
 }

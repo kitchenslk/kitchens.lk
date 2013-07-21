@@ -1,6 +1,10 @@
 package com.janaka.kitchenslk.service;
 
 import java.util.List;
+import java.util.Map;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Junction;
 
 import com.janaka.kitchenslk.enums.Status;
 
@@ -19,7 +23,7 @@ public interface CommonService {
      * @return
      *
      */
-    public <Entity> Entity getEntityById(Class classz, long id) ;
+    public <Entity> Entity getEntityById(Class classz, long id)throws Exception;
 
     /**
      * Generic create
@@ -28,7 +32,7 @@ public interface CommonService {
      * @return
      *
      */
-    public <Entity> long createEntity(Entity entity) ;
+    public <Entity> long createEntity(Entity entity)throws Exception;
 
     /**
      * Generic update
@@ -37,7 +41,7 @@ public interface CommonService {
      * @return
      *
      */
-    public <Entity> String updateEntity(Entity entity) ;
+    public <Entity> String updateEntity(Entity entity)throws Exception;
     
     /**
      * Generic save or update
@@ -46,7 +50,7 @@ public interface CommonService {
      * @return
      *
      */
-    public <Entity> String saveOrUpdateEntity(Entity entity) ;
+    public <Entity> String saveOrUpdateEntity(Entity entity)throws Exception;
 
     /**
      * Generic delete
@@ -55,7 +59,7 @@ public interface CommonService {
      * @return
      *
      */
-    public <Entity> String deleteEntity(Entity entity) ;
+    public <Entity> String deleteEntity(Entity entity) throws Exception;
 
     /**
      * Get a proxy object without hitting the db
@@ -65,7 +69,7 @@ public interface CommonService {
      * @return
      *
      */
-    public <Entity> Entity loadEntityById(Class classz, long id) ;
+    public <Entity> Entity loadEntityById(Class classz, long id) throws Exception;
     
     
     /**
@@ -73,6 +77,16 @@ public interface CommonService {
      * @param status
      * @return
      */
-    public <Entity> List<Entity> getAllEntitiesByStatus(Class classz,Status status); 
+    public <Entity> List<Entity> getAllEntitiesByStatus(Class classz,Status status)throws Exception;
+
+	
+	/**
+	 * @param classz
+	 * @param retrivingFieldMap
+	 * @param junction
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap, Criterion criterion)throws Exception; 
 
 }

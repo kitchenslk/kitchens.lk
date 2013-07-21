@@ -1,7 +1,10 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -46,7 +49,7 @@ public class Attribute implements Serializable {
 	private List<ItemAttribute> itemAttributes;
 	private Status status;
 	private int versionId;
-	private CommonDomainProperty commanDomainProperty;
+	private CommonDomainProperty commonDomainProperty;
 	
 	@Id
 	@SequenceGenerator(name = "idsequence", sequenceName = "attribute_id", allocationSize = 1, initialValue = 1)
@@ -103,19 +106,18 @@ public class Attribute implements Serializable {
 	public void setVersionId(int versionId) {
 		this.versionId = versionId;
 	}
-
+	
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-			@AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
 			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
-	public CommonDomainProperty getCommanDomainProperty() {
-		return commanDomainProperty;
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
 	}
-
-	public void setCommanDomainProperty(
-			CommonDomainProperty commanDomainProperty) {
-		this.commanDomainProperty = commanDomainProperty;
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
 	}
 
 	@Override
@@ -134,6 +136,27 @@ public class Attribute implements Serializable {
 			return builder.isEquals();
 		}
 		return false;
+	}
+	
+	public Map<String, Object> toBasicMap() {
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("attributeId", attributeId);
+		map.put("attributeName", attributeName);
+		map.put("attributeDescription", attributeDescription);
+		map.put("status", status);
+		map.put("commonDomainProperty", commonDomainProperty.toBasicMap());
+		return map;
+	}
+	
+	public List<Map<String,Object>> constructitemAttributeList(){
+		if(!(itemAttributes==null|| itemAttributes.isEmpty())){
+			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+			for (ItemAttribute attribute : itemAttributes) {
+				list.add(attribute.toBasicMap());
+			}
+			return list;
+		}
+		return null;
 	}
 
 

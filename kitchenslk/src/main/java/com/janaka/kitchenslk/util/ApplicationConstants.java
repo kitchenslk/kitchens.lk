@@ -24,6 +24,8 @@ public interface ApplicationConstants {
 	String DESTINATION_DIR_PATH = "DESTINATION_DIR_PATH";
 	String EXTENSION = "EXTENSION";
 	String THUMBNAIL_PATH = "THUMBNAIL_PATH";
+	String SYSTEM_ERROR = "SYSTEM_ERROR";
+	String GLOBAL_DATE_FORMAT = "MMM dd - yyyy";
 	
 
 }

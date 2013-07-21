@@ -45,7 +45,7 @@ public class ContactNumber implements Serializable{
 	private PriorityStatus contactNumberPriorityStatus;
 	private NotifyToContactStatus notifyToContactStatus;
 	private int versionId;
-	private CommonDomainProperty commanDomainProperty;
+	private CommonDomainProperty commonDomainProperty;
 	
 	@Id   
     @SequenceGenerator(name = "idsequence", sequenceName = "contact_number_id", allocationSize = 1, initialValue = 1)
@@ -96,20 +96,17 @@ public class ContactNumber implements Serializable{
 	}
 	
 	@Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "creationDate", column =
-        @Column(name = "CREATION_DATE")),
-        @AttributeOverride(name = "lastModifiedUser", column =
-        @Column(name = "LAST_MODIFIED_USER")),
-        @AttributeOverride(name = "lastModifiedDate", column =
-        @Column(name = "LAST_MODIFIED_DATE"))
-    })
-    public CommonDomainProperty getCommanDomainProperty() {
-        return commanDomainProperty;
-    }   
-	public void setCommanDomainProperty(CommonDomainProperty commanDomainProperty) {
-        this.commanDomainProperty = commanDomainProperty;
-    }  
+	@AttributeOverrides({
+			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
+	}
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
+	}
 	
 	@Override
 	public int hashCode() {

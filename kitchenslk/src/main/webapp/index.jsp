@@ -6,6 +6,7 @@
 	<li><a href="login.htm">Login</a></li>
 	<li><a href="login/register.htm">Login</a></li>
 	<li><a href="items.htm">items</a></li>
+	<li><a href="master/attributes.htm">Attributes</a></li>
 </ul>
 </body>
 </html>

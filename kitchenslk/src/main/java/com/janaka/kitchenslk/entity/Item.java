@@ -1,7 +1,10 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -49,7 +52,7 @@ public class Item implements Serializable {
 	private List<ItemAttribute> itemAttributes;
 	private Status status;
 	private int versionId;
-	private CommonDomainProperty commanDomainProperty;
+	private CommonDomainProperty commonDomainProperty;
 	
 	
 	@Id
@@ -122,14 +125,14 @@ public class Item implements Serializable {
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-			@AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
 			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
-	public CommonDomainProperty getCommanDomainProperty() {
-		return commanDomainProperty;
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
 	}
-	public void setCommanDomainProperty(
-			CommonDomainProperty commanDomainProperty) {
-		this.commanDomainProperty = commanDomainProperty;
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
 	}
 
 	@Override
@@ -148,6 +151,41 @@ public class Item implements Serializable {
 			return builder.isEquals();
 		}
 		return false;
+	}
+	
+	public Map<String,Object> toBasicMap() {
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("itemId", itemId);
+		map.put("itemName", itemName);
+		map.put("itemDescription", itemDescription);
+		map.put("status", status);
+		if(!(commonDomainProperty==null)){
+			map.put("commonDomainProperty", commonDomainProperty.toBasicMap());
+		}
+		return map;
+	}
+	
+	public Map<String,Object> toCompleteMapWithoutParents() {
+		Map<String,Object> map=this.toBasicMap();		
+		map.put("itemAttributes", constructItemAttributes());	
+		return map;
+	}
+	
+	private List<Map<String,Object>> constructItemAttributes() {
+		List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+		if(!(itemAttributes==null || itemAttributes.isEmpty())){
+			for (ItemAttribute itemAttribute : itemAttributes) {
+				list.add(itemAttribute.toBasicMap());
+			}	
+		}		
+		return list;
+	}
+	public Map<String,Object> toCompleteMap() {
+		Map<String,Object> map=this.toCompleteMapWithoutParents();		
+		if(!(menu==null)){
+			map.put("menu", menu.toBasicMap());
+		}
+		return map;
 	}
 
 }

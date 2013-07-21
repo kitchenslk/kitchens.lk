@@ -1,11 +1,15 @@
 package com.janaka.kitchenslk.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Junction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.janaka.kitchenslk.dao.CommonDAO;
+import com.janaka.kitchenslk.entity.Attribute;
 import com.janaka.kitchenslk.enums.Status;
 
 /**
@@ -20,39 +24,44 @@ public class CommonServiceImpl implements CommonService{
 	private CommonDAO commonDAO;
 
 	@Override
-	public <Entity> Entity getEntityById(Class classz, long id) {
+	public <Entity> Entity getEntityById(Class classz, long id)throws Exception {
 		return commonDAO.getEntityById(classz, id);
 	}
 
 	@Override
-	public <Entity> long createEntity(Entity entity) {
+	public <Entity> long createEntity(Entity entity)throws Exception{
 		return commonDAO.createEntity(entity);
 	}
 
 	@Override
-	public <Entity> String updateEntity(Entity entity) {
+	public <Entity> String updateEntity(Entity entity)throws Exception {
 		return commonDAO.updateEntity(entity);
 	}
 
 	@Override
-	public <Entity> String saveOrUpdateEntity(Entity entity) {
+	public <Entity> String saveOrUpdateEntity(Entity entity) throws Exception{
 		return commonDAO.saveOrUpdateEntity(entity);
 	}
 
 	@Override
-	public <Entity> String deleteEntity(Entity entity) {
+	public <Entity> String deleteEntity(Entity entity)throws Exception {
 		return commonDAO.deleteEntity(entity);
 	}
 
 	@Override
-	public <Entity> Entity loadEntityById(Class classz, long id) {
+	public <Entity> Entity loadEntityById(Class classz, long id)throws Exception {
 		return commonDAO.loadEntityById(classz, id);
 	}
 
 	@Override
 	public <Entity> List<Entity> getAllEntitiesByStatus(Class classz,
-			Status status) {
+			Status status)throws Exception {
 		return commonDAO.getAllEntitiesByStatus(classz, status);
+	}
+	
+	@Override
+	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap,Criterion criterion)throws Exception {
+		return commonDAO.listGivenFieldsByGivenCriteria(classz,retrivingFieldMap,criterion);
 	}
 
 }

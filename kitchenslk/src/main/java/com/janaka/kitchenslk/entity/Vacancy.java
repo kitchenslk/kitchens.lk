@@ -60,7 +60,7 @@ public class Vacancy implements Serializable {
 	private Kitchen kitchen;
 	private Status status;
 	private int versionId;
-	private CommonDomainProperty commanDomainProperty;
+	private CommonDomainProperty commonDomainProperty;
 	
 	
 	@Id
@@ -177,15 +177,14 @@ public class Vacancy implements Serializable {
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-			@AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
 			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
-	public CommonDomainProperty getCommanDomainProperty() {
-		return commanDomainProperty;
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
 	}
-
-	public void setCommanDomainProperty(
-			CommonDomainProperty commanDomainProperty) {
-		this.commanDomainProperty = commanDomainProperty;
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
 	}
 
 	@Override

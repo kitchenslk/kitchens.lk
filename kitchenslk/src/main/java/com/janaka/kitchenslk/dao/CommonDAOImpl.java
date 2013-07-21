@@ -1,9 +1,17 @@
 package com.janaka.kitchenslk.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Conjunction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 import org.jboss.seam.annotations.security.Restrict;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +38,7 @@ public class CommonDAOImpl implements CommonDAO {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public <Entity> long createEntity(Entity entity) {
+	public <Entity> long createEntity(Entity entity) throws Exception{
 		Object obj=sessionFactory.getCurrentSession().save(entity);
 		if(!(obj==null))
 		return (Long) obj;
@@ -39,46 +47,59 @@ public class CommonDAOImpl implements CommonDAO {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public <Entity> String deleteEntity(Entity entity) {
+	public <Entity> String deleteEntity(Entity entity) throws Exception{
 		sessionFactory.getCurrentSession().delete(entity);
 		return "success";
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public <Entity> Entity getEntityById(Class classz, long id) {
+	public <Entity> Entity getEntityById(Class classz, long id) throws Exception{
 
 		return (Entity) sessionFactory.getCurrentSession().get(classz, id);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public <Entity> Entity loadEntityById(Class classz, long id) {
+	public <Entity> Entity loadEntityById(Class classz, long id)throws Exception {
 		return (Entity) sessionFactory.getCurrentSession().load(classz, id);
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public <Entity> String updateEntity(Entity entity) {
+	public <Entity> String updateEntity(Entity entity)throws Exception {
 		sessionFactory.getCurrentSession().update(entity);
 		return ApplicationConstants.SUCCESS;
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	public <Entity> String saveOrUpdateEntity(Entity entity) {
+	public <Entity> String saveOrUpdateEntity(Entity entity)throws Exception {
 		sessionFactory.getCurrentSession().saveOrUpdate(entity);
 		return ApplicationConstants.SUCCESS;
 	}
 	
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-	public <Entity> List<Entity> getAllEntitiesByStatus(Class classz,Status status) {
+	public <Entity> List<Entity> getAllEntitiesByStatus(Class classz,Status status) throws Exception{
 		Criteria criteria=sessionFactory.getCurrentSession().createCriteria(classz);
 		if(!(status==null)){
 			criteria.add(Restrictions.eq("status", status));
 		}
 		return criteria.list();
+	}
+	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap, Criterion criterion)throws Exception {
+		Criteria criteria=sessionFactory.getCurrentSession().createCriteria(classz);
+		ProjectionList projectionList=Projections.projectionList();
+		for (Entry<String, String> entry : retrivingFieldMap.entrySet()) {
+			projectionList.add(Property.forName(entry.getKey()).as(entry.getValue()));
+		}
+		criteria.setProjection(projectionList);
+		criteria.add(criterion);
+		return criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP).list();
 	}
 	
 }

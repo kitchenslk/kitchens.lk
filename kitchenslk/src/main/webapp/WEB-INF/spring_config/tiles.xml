@@ -18,6 +18,11 @@
         <put-attribute name="title" value="" />        
         <put-attribute name="body" value="" />       
     </definition>
+    
+     <definition name="master.definition"  template="/WEB-INF/jsp/layouts/masterLayout.jsp">
+        <put-attribute name="title" value="" />        
+        <put-attribute name="body" value="" />       
+    </definition>
  
     <definition name="imageUpload" extends="base.definition">
         <put-attribute name="title" value="ImageUpload" />
@@ -45,7 +50,7 @@
         <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/authSuccess.jsp" />
     </definition>
 
-     <!-- MERCHANT -->
+    <!-- MERCHANT -->
     <definition name="listItems" extends="merchant.definition">
         <put-attribute name="title" value="Item List" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/listItems.jsp" />
@@ -54,6 +59,17 @@
     <definition name="addItem" extends="merchant.definition">
         <put-attribute name="title" value="Add Item" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/addItem.jsp" />
+    </definition>
+    
+     <!-- MASTER -->
+    <definition name="listAttributes" extends="master.definition">
+        <put-attribute name="title" value="Attribute List" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/master/listAttributes.jsp" />
+    </definition>
+    
+    <definition name="addAttribute" extends="master.definition">
+        <put-attribute name="title" value="Add Attribute" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/master/addAttribute.jsp" />
     </definition>
     
  

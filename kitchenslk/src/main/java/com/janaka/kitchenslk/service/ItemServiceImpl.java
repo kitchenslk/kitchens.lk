@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.janaka.kitchenslk.dao.CommonDAO;
-import com.janaka.kitchenslk.entity.Attribute;
 import com.janaka.kitchenslk.entity.Item;
 import com.janaka.kitchenslk.enums.Status;
 import com.janaka.kitchenslk.util.ApplicationConstants;
@@ -28,11 +27,7 @@ public class ItemServiceImpl implements ItemService {
 		return ApplicationConstants.SUCCESS;
 	}
 
-	@Override
-	public List<Attribute> listAllAttributes(Status status) throws Exception {
-		return commonDAO.getAllEntitiesByStatus(Attribute.class, status);
-	}
-	
+
 	@Override
 	public List<Item> listAllItems(Status status) throws Exception {
 		return commonDAO.getAllEntitiesByStatus(Item.class,status);

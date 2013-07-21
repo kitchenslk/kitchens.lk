@@ -2,7 +2,6 @@ package com.janaka.kitchenslk.service;
 
 import java.util.List;
 
-import com.janaka.kitchenslk.entity.Attribute;
 import com.janaka.kitchenslk.entity.Item;
 import com.janaka.kitchenslk.enums.Status;
 
@@ -13,10 +12,8 @@ import com.janaka.kitchenslk.enums.Status;
  */
 public interface ItemService {
 	
-	public String createItem(Item item)throws Exception;
+	public String createItem(Item item)throws Exception;	
 	
-	public List<Attribute> listAllAttributes(Status status)throws Exception;
-
 	public List<Item> listAllItems(Status status)throws Exception;
 	
 

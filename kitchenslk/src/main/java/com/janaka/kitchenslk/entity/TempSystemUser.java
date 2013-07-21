@@ -48,6 +48,8 @@ public class TempSystemUser implements Serializable {
     private static final long serialVersionUID = 1L;
     private long tempUserId;
     private String tempUserName;
+    private String emailAddress;
+    private String contactNumber;
     private String encryptedTempUserName;
     private String tempPassword;
     private Set<UserRole> userRoles;
@@ -75,10 +77,25 @@ public class TempSystemUser implements Serializable {
     public String getTempUserName() {
         return tempUserName;
     }
-
     public void setTempUserName(String tempUserName) {
         this.tempUserName = tempUserName;
     }
+    
+    @Column(name = "EMAIL_ADDRESS")
+    public String getEmailAddress() {
+		return emailAddress;
+	}
+    public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+    
+    @Column(name = "CONTACT_NUMBER")
+    public String getContactNumber() {
+		return contactNumber;
+	}
+    public void setContactNumber(String contactNumber) {
+		this.contactNumber = contactNumber;
+	}
 
     @Column(name = "TEMP_PASSWORD")
     public String getTempPassword() {
@@ -150,21 +167,17 @@ public class TempSystemUser implements Serializable {
 	}
 
 	@Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "creationDate", column =
-        @Column(name = "CREATION_DATE")),
-        @AttributeOverride(name = "lastModifiedUser", column =
-        @Column(name = "LAST_MODIFIED_USER")),
-        @AttributeOverride(name = "lastModifiedDate", column =
-        @Column(name = "LAST_MODIFIED_DATE"))
-    })
-    public CommonDomainProperty getCommonDomainProperty() {
-        return commonDomainProperty;
-    }
-
-    public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
-        this.commonDomainProperty = commonDomainProperty;
-    }
+	@AttributeOverrides({
+			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
+	}
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
+	}
     
     /**
      * Does a shallow copy of {@link TempSystemUser} to a newly created {@link SystemUser}.<br><br>

@@ -1,6 +1,7 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.AttributeOverride;
@@ -43,9 +44,7 @@ public class UploadedFile implements Serializable {
 	private String physicalFilePath;	
 	private String thumbnailPath;
 	private int versionId;
-    private CommonDomainProperty commanDomainProperty;
-    
-    
+    private CommonDomainProperty commonDomainProperty;    
 	
 	
 	@Id
@@ -110,17 +109,18 @@ public class UploadedFile implements Serializable {
 	this.versionId = versionId;
     }
 
-    @Embedded
-    @AttributeOverrides({ @AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-	    @AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
-	    @AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
-    public CommonDomainProperty getCommanDomainProperty() {
-	return commanDomainProperty;
-    }
-
-    public void setCommanDomainProperty(CommonDomainProperty commanDomainProperty) {
-	this.commanDomainProperty = commanDomainProperty;
-    }
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
+	}
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
+	}
     
     /**
 	 * 
@@ -132,12 +132,12 @@ public class UploadedFile implements Serializable {
 	/**
 	 * @param map
 	 */
-	public UploadedFile(Map<String, String> map) {
+	public UploadedFile(Map<String, String> map, SystemUser user) {
 		this.fileUrl=map.get(ApplicationConstants.FILE_URL);
 		this.physicalFilePath=map.get(ApplicationConstants.PHYSICAL_FILE_PATH);
 		this.uploadedFileName=map.get(ApplicationConstants.UPLOADED_FILE_NAME);
 		this.constructedFileName=map.get(ApplicationConstants.CONSTRUCTED_FILE_NAME);
-		this.commanDomainProperty=CommonFunctions.getCommonDomainPropertyForSavingEntity();
+		this.commonDomainProperty=CommonFunctions.getCommonDomainPropertyForSavingEntity(user);
 	}
         
     @Override
@@ -159,6 +159,20 @@ public class UploadedFile implements Serializable {
             return builder.isEquals();
         }
         return false;
+	}
+	
+	public Map<String,Object> toBasicMap() {
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("uploadedFileId", uploadedFileId);
+		map.put("uploadedFileName", uploadedFileName);
+		map.put("constructedFileName", constructedFileName);
+		map.put("fileUrl", fileUrl);
+		map.put("physicalFilePath", physicalFilePath);
+		map.put("thumbnailPath", thumbnailPath);
+		if(!(commonDomainProperty==null)){
+			map.put("commonDomainProperty", commonDomainProperty.toBasicMap());
+		}
+		return map;
 	}
 
 }

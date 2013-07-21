@@ -1,7 +1,10 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -50,7 +53,7 @@ public class ItemAttribute implements Serializable {
 	private List<ItemAttributeValue> itemAttributeValues;	
 	private Status status;
 	private int versionId;
-	private CommonDomainProperty commanDomainProperty;
+	private CommonDomainProperty commonDomainProperty;
 	
 	@Id
 	@SequenceGenerator(name = "idsequence", sequenceName = "item_attribute_id", allocationSize = 1, initialValue = 1)
@@ -123,15 +126,14 @@ public class ItemAttribute implements Serializable {
 	@Embedded
 	@AttributeOverrides({
 			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
-			@AttributeOverride(name = "lastModifiedUser", column = @Column(name = "LAST_MODIFIED_USER")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
 			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
-	public CommonDomainProperty getCommanDomainProperty() {
-		return commanDomainProperty;
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
 	}
-
-	public void setCommanDomainProperty(
-			CommonDomainProperty commanDomainProperty) {
-		this.commanDomainProperty = commanDomainProperty;
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
 	}
 
 	@Override
@@ -150,6 +152,47 @@ public class ItemAttribute implements Serializable {
 			return builder.isEquals();
 		}
 		return false;
+	}
+	
+	public Map<String, Object> toBasicMap() {
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("itemAttributeId", itemAttributeId);
+		map.put("itemAttributeDescription", itemAttributeDescription);
+		map.put("status", status);
+		if(!(commonDomainProperty==null)){
+			map.put("commonDomainProperty", commonDomainProperty.toBasicMap());
+		}	
+		return map;
+	}
+	
+	public Map<String, Object> toCompleteMapWithoutParents() {
+		Map<String, Object> map=this.toBasicMap();
+		map.put("itemAttributeValues", constructItemAttributeValueList());			
+		return map;
+	}
+	
+	public Map<String, Object> toCompleteMap() {
+		Map<String, Object> map=this.toCompleteMapWithoutParents();
+		if(!(item==null)){
+			map.put("item", item.toBasicMap());
+		}
+		if(!(attribute==null)){
+			map.put("attribute", attribute.toBasicMap());
+		}
+		return map;
+	}
+	
+	
+	
+	public List<Map<String,Object>> constructItemAttributeValueList(){
+		if(!(itemAttributeValues==null|| itemAttributeValues.isEmpty())){
+			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+			for (ItemAttributeValue attributeValue : itemAttributeValues) {
+				list.add(attributeValue.toCompleteMapWithoutParents());
+			}
+			return list;
+		}
+		return null;
 	}
 	
 

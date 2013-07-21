@@ -1,7 +1,10 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -18,6 +21,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
@@ -97,24 +102,65 @@ public class Category implements Serializable {
         this.versionId = versionId;
     }       
     
-    @Embedded
-    @AttributeOverrides({
-        @AttributeOverride(name = "creationDate", column =
-        @Column(name = "CREATION_DATE")),
-        @AttributeOverride(name = "createdUser", column =
-        @Column()),
-        @AttributeOverride(name = "lastModifiedUser", column =
-        @Column()),        
-        @AttributeOverride(name = "lastModifiedDate", column =
-        @Column(name = "LAST_MODIFIED_DATE"))
-    })
-    public CommonDomainProperty getCommonDomainProperty() {
-        return commonDomainProperty;
-    }
+	@Embedded
+	@AttributeOverrides({
+			@AttributeOverride(name = "creationDate", column = @Column(name = "CREATION_DATE")),
+			@AttributeOverride(name = "createdUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedUser", column = @Column()),
+			@AttributeOverride(name = "lastModifiedDate", column = @Column(name = "LAST_MODIFIED_DATE")) })
+	public CommonDomainProperty getCommonDomainProperty() {
+		return commonDomainProperty;
+	}
+	public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
+		this.commonDomainProperty = commonDomainProperty;
+	}
+	
+	@Override
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder();
+		builder.append(this.categoryId);
+		return builder.toHashCode();
+	}
 
-    public void setCommonDomainProperty(CommonDomainProperty commonDomainProperty) {
-        this.commonDomainProperty = commonDomainProperty;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Complain) {
+			Category other = (Category) obj;
+			EqualsBuilder builder = new EqualsBuilder();
+			builder.append(this.categoryId, other.categoryId);
+			return builder.isEquals();
+		}
+		return false;
+	}
+	
+	public Map<String,Object> toBasicMap() {
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("categoryId", categoryId);
+		map.put("categoryName", categoryName);
+		map.put("categoryDescription", categoryDescription);
+		map.put("status", status);
+		if(!(commonDomainProperty==null)){
+			map.put("commonDomainProperty", commonDomainProperty.toBasicMap());
+		}		
+		return map;
+	}
+	
+	public Map<String,Object> toCompletecMap() {
+		Map<String,Object> map=this.toBasicMap();
+		map.put("menus", constructMenuList());		
+		return map;
+	}
+	
+	private List<Map<String,Object>> constructMenuList() {
+		if(!(menus==null)){
+			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+			for (Menu menu : menus) {
+				list.add(menu.toBasicMap());
+			}
+			return list;
+		}
+		return null;
+	}
 	
 	
 	

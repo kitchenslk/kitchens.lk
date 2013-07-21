@@ -11,10 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.security.core.GrantedAuthority;
 
 import com.janaka.kitchenslk.enums.UserRoleType;
 
@@ -28,7 +30,7 @@ import com.janaka.kitchenslk.enums.UserRoleType;
 @DynamicInsert(value=true)
 @DynamicUpdate(value=true)
 @Table(name = "USER_ROLE")
-public class UserRole implements Serializable {
+public class UserRole implements GrantedAuthority, Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private long userRoleId;
@@ -97,6 +99,12 @@ public class UserRole implements Serializable {
 			return false;
 		}
 		return true;
+	}
+
+	@Transient
+	@Override
+	public String getAuthority() {
+		return userRoleType.toString();
 	}
 	
 }

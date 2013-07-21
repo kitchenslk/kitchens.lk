@@ -16,6 +16,10 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.janaka.kitchenslk.commons.CommonFunctions;
+import com.janaka.kitchenslk.enums.NotifyToContactStatus;
+import com.janaka.kitchenslk.enums.PriorityStatus;
+
 /**
  * @author	: Nadeeshani Senevirathna
  * Date/Time: May 25, 2013 - 6:53:31 PM
@@ -31,6 +35,18 @@ public class ContactNumberSystemUser extends ContactNumber implements Serializab
 	private static final long serialVersionUID = 1L;
 	
 	private SystemUserDetail systemUserDetail;
+	
+	public ContactNumberSystemUser() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ContactNumberSystemUser(String contactNumber,SystemUserDetail systemUserDetail) {
+		this.setCommonDomainProperty(CommonFunctions.getCommonDomainPropertyForSavingEntity(systemUserDetail.getSystemUser()));
+		this.setContactNumberPriorityStatus(PriorityStatus.PRIMARY);
+		this.setContactNumberValue(contactNumber);
+		this.setNotifyToContactStatus(NotifyToContactStatus.YES);
+		this.setUserDetail(systemUserDetail);
+	}
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "USER_DETAIL_ID", nullable = false)

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.janaka.kitchenslk.entity.SystemUser;
+import com.janaka.kitchenslk.entity.TempSystemUser;
 
 /**
  * @author	: Nadeeshani Senevirathna
@@ -17,16 +18,15 @@ import com.janaka.kitchenslk.entity.SystemUser;
  * Project	: kitchenslk
  */
 @Repository(value="systemUserDAO")
-@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+@Transactional(propagation=Propagation.SUPPORTS, readOnly=false)
 public class SystemUserDAOImpl implements SystemUserDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	/* (non-Javadoc)
-	 * @see com.janaka.kitchenslk.dao.SystemUserDAO#getSystemUserByUserName(java.lang.String)
-	 */
+
 	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
 	public SystemUser getSystemUserByUserName(String username) throws Exception {
 		Criteria criteria=sessionFactory.getCurrentSession().createCriteria(SystemUser.class);
 		criteria.add(Restrictions.eq("userName", username));
@@ -34,6 +34,16 @@ public class SystemUserDAOImpl implements SystemUserDAO {
 		if(!(systemUser==null)){
 			Hibernate.initialize(systemUser.getUserRoles());
 		}
+		return systemUser;
+	}
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, readOnly=false)
+	public TempSystemUser getTempSystemUserByEncryptedUserName(String userName)
+			throws Exception {
+		Criteria criteria=sessionFactory.getCurrentSession().createCriteria(TempSystemUser.class);
+		criteria.add(Restrictions.eq("encryptedTempUserName", userName));
+		TempSystemUser systemUser=(TempSystemUser) criteria.uniqueResult();		
 		return systemUser;
 	}
 

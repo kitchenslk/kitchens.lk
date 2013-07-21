@@ -1,5 +1,6 @@
 package com.janaka.kitchenslk.commons;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -47,9 +48,9 @@ public class CommonFunctions {
 	 * 
 	 * @return {@link CommonDomainProperty} cdp
 	 */
-	public static CommonDomainProperty getCommonDomainPropertyForSavingEntity() {
+	public static CommonDomainProperty getCommonDomainPropertyForSavingEntity(SystemUser userId) {
 
-		return generateCommonDomainPropertyFor(null, null);
+		return generateCommonDomainPropertyFor(null, userId, null);
 	}
 
 	/**
@@ -58,14 +59,15 @@ public class CommonFunctions {
 	 * 
 	 * @return {@link CommonDomainProperty} cdp
 	 */
-	public static CommonDomainProperty getCommonDomainPropertyForUpdatingEntity(CommonDomainProperty cdp, Long userId) {
+	public static CommonDomainProperty getCommonDomainPropertyForUpdatingEntity(CommonDomainProperty cdp, SystemUser userId) {
 
-		return generateCommonDomainPropertyFor(cdp, userId);
+		return generateCommonDomainPropertyFor(cdp, null, userId);
 	}
 
 	/**
 	 * This creates a {@link CommonDomainProperty} if a null} is passed in or
 	 * sets the lastModifiedDate for the passed cdp.
+	 * @param updatedUser TODO
 	 * 
 	 * @param {@link Long } userId - pass null if you are saving an Entity
 	 * @param {@link CommonDomainProperty} cdp - - pass null if you are saving
@@ -73,15 +75,15 @@ public class CommonFunctions {
 	 * 
 	 * @return {@link CommonDomainProperty} cdp
 	 */
-	private static CommonDomainProperty generateCommonDomainPropertyFor(CommonDomainProperty cdp, Long userId) {
+	private static CommonDomainProperty generateCommonDomainPropertyFor(CommonDomainProperty cdp, SystemUser createdUser, SystemUser updatedUser) {
 
 		Date now = new GregorianCalendar().getTime();
 		// If the operation is a save
 		if (cdp == null) {
-			cdp = new CommonDomainProperty(now);
+			cdp = new CommonDomainProperty(now, createdUser);
 		} else {// If the operation is an update
 			cdp.setLastModifiedDate(now);
-			cdp.setLastModifiedUser(userId);
+			cdp.setLastModifiedUser(updatedUser);
 		}
 
 		return cdp;
@@ -120,7 +122,7 @@ public class CommonFunctions {
 		TempSystemUser tempSystemUser = new TempSystemUser();
 		tempSystemUser.setRecordId(generateTempUserRecordId(password));
 		tempSystemUser.setTempUserName(userName);
-		tempSystemUser.setCommonDomainProperty(generateCommonDomainPropertyFor(null, null));
+		tempSystemUser.setCommonDomainProperty(generateCommonDomainPropertyFor(null, null, null));
 		tempSystemUser.setStatus(Status.PENDING);
 		return tempSystemUser;
 	}
@@ -370,6 +372,12 @@ public class CommonFunctions {
 		resultMap.put(ApplicationConstants.EXTENSION, extension);
 		resultMap.put(ApplicationConstants.THUMBNAIL_PATH, THUMBNAIL_PATH);
 		return resultMap;
+	}
+
+	
+	public static SimpleDateFormat getGlobalSimpleDateFormat() {
+		SimpleDateFormat sdf=new SimpleDateFormat(ApplicationConstants.GLOBAL_DATE_FORMAT);
+		return sdf;
 	}
 
 	

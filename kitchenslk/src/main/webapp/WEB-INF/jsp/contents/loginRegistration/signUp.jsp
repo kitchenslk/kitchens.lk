@@ -54,18 +54,18 @@
 		return true;
 	}
 	
-	boolean userNameValid=false;
-	boolean passwordsMatch=false;
+	var userNameValid=false;
+	var passwordsMatch=false;
 	function checkIfUserNameExists(val){
 		val=$.trim(val);
 		if(!(val==null || val=="")){
-			$.get('checkifusernameexist.htm',{val:val},function(data){
-				if(data.status=='true'){
-					$('#usernameValidate').val('User Name alreday exists! please enter another one');
-					userNameValid false;
+			$.getJSON('checkifusernameexist.htm',{val:val},function(data){
+				if(data.status==true){
+					$('#usernameValidate').html('User Name alreday exists! please enter another one');
+					userNameValid =false;
 				}else{
-					$('#usernameValidate').val('');
-					userNameValid true;
+					$('#usernameValidate').html('');
+					userNameValid =true;
 				}
 			});
 		}

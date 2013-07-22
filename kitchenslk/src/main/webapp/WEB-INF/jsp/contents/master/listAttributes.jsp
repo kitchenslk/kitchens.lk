@@ -12,5 +12,5 @@
 <c:forEach items="${attributeList}" var="attribute">
 	<c:out value="${attribute.attributeName}"></c:out>
 	<c:out value="${attribute.attributeDescription}"></c:out>
-	<a href="modifyattribute.htm?id=${attribute.itemAttributes}">Modify</a>
+	<a href="modifyattribute.htm?id=${attribute.attributeId}">Modify</a>
 </c:forEach>

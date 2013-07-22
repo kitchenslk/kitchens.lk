@@ -1,0 +1,18 @@
+<table style="width:100%;margin-top:10px;font-size:16px;" cellspacing="10px" cellpadding="5px">
+	<tr>
+		<td>You have successfully registered with the
+			<a href="${url}" style="font-weight:bold;color:#3333ff;text-decoration:none;">Kitchenslk</a> 
+			system on $sentDate 
+		</td>
+	</tr>
+	<tr>
+		<td>To confirm your email address, please click on the following link</td>								
+	</tr>
+	<tr>
+		<td>
+			<a href="${url}login/confirmtempuser.htm?eun=$encryptedUserName" style="font-weight:bold;color:#0000ff">
+				Link :${url}login/confirmtempuser.htm
+			</a>
+		</td>									
+	</tr>
+</table>

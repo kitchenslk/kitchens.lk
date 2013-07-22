@@ -51,7 +51,7 @@ public class Menu implements Serializable {
 	private UploadedFile menuImage;
 	private String description;
 	private double price;
-	private Category category;
+	private SubCategory subCategory;
 	private List<Item> items;
 	private List<MenuReview> menuReviews;
 	private Kitchen kitchen;
@@ -105,19 +105,19 @@ public class Menu implements Serializable {
 	}
 	
 	@ManyToOne()
-	@JoinColumn(name="CATEGORY_ID")
-	public Category getCategory() {
-		return category;
+	@JoinColumn(name="SUB_CATEGORY_ID")
+	public SubCategory getSubCategory() {
+		return subCategory;
 	}
-	public void setCategory(Category category) {
-		this.category = category;
+	public void setSubCategory(SubCategory subCategory) {
+		this.subCategory = subCategory;
 	}
 	
 	@OneToMany(mappedBy="menu",fetch=FetchType.LAZY)
 	@Cascade(CascadeType.ALL)
 	public List<Item> getItems() {
 		return items;
-	}
+	}	
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
@@ -200,8 +200,8 @@ public class Menu implements Serializable {
 		}		
 		map.put("description", description);
 		map.put("price", price);
-		if(!(category==null)){
-			map.put("category;", category.toBasicMap());
+		if(!(subCategory==null)){
+			map.put("subCategory", subCategory.toBasicMap());
 		}		
 		map.put("status", status);	
 		if(!(commonDomainProperty==null)){

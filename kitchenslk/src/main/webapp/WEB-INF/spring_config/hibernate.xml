@@ -14,8 +14,6 @@
 	<!-- enable declarative transaction management -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
-	<context:property-placeholder location="classpath:hibernate.properties" />
-	
 	<bean id="sysProps"
 		class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
 		<property name="targetClass">

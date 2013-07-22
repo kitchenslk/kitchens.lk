@@ -36,8 +36,12 @@
 		<javax-servlet-jsp-api-version>2.1</javax-servlet-jsp-api-version>
 		<javax-servlet-api-version>2.5</javax-servlet-api-version>
 		<c3p0-version>0.9.1.2</c3p0-version>
+		<freemarker-version>2.3.20</freemarker-version>
+		<javax-mai-version>1.4.7</javax-mai-version>
+		<velocity-version>1.7</velocity-version>
 	</properties>
 
+            
 	<repositories>
 		<repository>
 			<id>com.springsource.repository.bundles.milestone</id>
@@ -92,6 +96,11 @@
 			<artifactId>spring-core</artifactId>
 			<version>${spring-version}</version>
 		</dependency>
+		<dependency>
+		   <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		    <version>${spring-version}</version>
+		 </dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
@@ -372,7 +381,7 @@
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-jaxrs</artifactId>
-			<version>1.6.1</version>
+			<version>1.9.9</version>
 		</dependency>
 
 		<dependency>
@@ -440,6 +449,26 @@
 		  <artifactId>socialauth-filter</artifactId>
 		  <version>2.4</version>
 		</dependency>
+		
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.freemarker</groupId> -->
+<!-- 			<artifactId>freemarker</artifactId> -->
+<!-- 			<version>${freemarker-version}</version> -->
+<!-- 		</dependency> -->
+		
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>${javax-mai-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>${velocity-version}</version>
+		</dependency>
+            
+		
 		
 	</dependencies>
   

@@ -30,7 +30,7 @@
 				<td>
 					<form:radiobutton path="status"   id="status_active" name="status" value="ACTIVE"/> Active
 					&nbsp;&nbsp;
-					<form:radiobutton path="status" id="status_inactive" name="status" value="INACTIVE"/> Active
+					<form:radiobutton path="status" id="status_inactive" name="status" value="INACTIVE"/> Inactive
 				</td>
 			</tr>
 			<tr>

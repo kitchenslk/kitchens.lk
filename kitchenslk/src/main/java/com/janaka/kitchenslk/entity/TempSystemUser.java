@@ -1,6 +1,8 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -18,12 +20,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cascade;
@@ -31,6 +35,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.janaka.kitchenslk.commons.CommonFunctions;
+import com.janaka.kitchenslk.enums.EmailType;
 import com.janaka.kitchenslk.enums.Status;
 
 /**
@@ -56,6 +61,7 @@ public class TempSystemUser implements Serializable {
     private int versionId;
     private Status status;
     private String recordId;
+    private List<TempNotification> tempNotifications;
     private CommonDomainProperty commonDomainProperty;
     private SystemUser systemUser;
     
@@ -125,8 +131,18 @@ public class TempSystemUser implements Serializable {
     public void setUserRoles(Set<UserRole> userRoles) {
         this.userRoles = userRoles;
     }
+    
+    
+    @OneToMany(mappedBy="receiver")
+    @Cascade(value=org.hibernate.annotations.CascadeType.ALL)
+    public List<TempNotification> getTempNotifications() {
+		return tempNotifications;
+	}
+	public void setTempNotifications(List<TempNotification> tempNotifications) {
+		this.tempNotifications = tempNotifications;
+	}
 
-    @Version
+	@Version
     @Column(name = "VERSION_ID")
     public int getVersionId() {
         return versionId;
@@ -232,5 +248,18 @@ public class TempSystemUser implements Serializable {
             return builder.isEquals();
         }
         return false;
+	}
+
+	public TempNotification createSignUpNotification() {
+		TempNotification tempNotification=null;
+		if(this.tempNotifications==null){
+			this.tempNotifications=new ArrayList<TempNotification>();
+		}
+		if(StringUtils.isNotEmpty(emailAddress) || StringUtils.isNotEmpty(contactNumber)){
+			tempNotification=new TempNotification(this);
+			tempNotification.setEmailType(EmailType.SIGN_UP_CONFIRMATION);
+			this.tempNotifications.add(tempNotification); 
+		}
+		return tempNotification;
 	}
 }

@@ -27,5 +27,11 @@ public interface ApplicationConstants {
 	String SYSTEM_ERROR = "SYSTEM_ERROR";
 	String GLOBAL_DATE_FORMAT = "MMM dd - yyyy";
 	
+	
+	String URL = "url";
+	String ENCRYPTED_NOTIFIED_MAIL_ADDRES="encryptedUserName";
+	String SENT_DATE="sentDate";
+	String MAIN_EMAIL_TEMPLATE_LOCATION = "common_mail_template.vm";
+	
 
 }

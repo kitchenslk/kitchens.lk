@@ -1,9 +1,11 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -268,6 +270,27 @@ public class SystemUser implements Serializable,UserDetails{
 			return true;
 		}
 		return false;
+	}
+
+	public boolean checkIfHasGivenUserRole(UserRoleType  userRoleType) {
+		if(!(userRoles==null)){
+			for (UserRole  userRole : userRoles) {
+				if(userRole.getAuthority().equals(userRoleType.toString())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public List<UserRoleType> listAllUserRoleTypes() {
+		if(!(userRoles==null)){
+			List<UserRoleType> userRoleTypes=new ArrayList<UserRoleType>();
+			for (UserRole  userRole : userRoles) {
+				userRoleTypes.add(userRole.getUserRoleType());
+			}
+		}		
+		return null;
 	}
 	
 }

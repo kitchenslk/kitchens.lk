@@ -102,4 +102,12 @@ public class CommonDAOImpl implements CommonDAO {
 		return criteria.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP).list();
 	}
 	
+	@Override
+	@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+	public <Entity> Entity getEntityByGivenFieldValue(Class<Entity> class1,	String fieldName, String fieldValue) throws Exception {
+		Criteria criteria=sessionFactory.getCurrentSession().createCriteria(class1);
+		criteria.add(Restrictions.eq(fieldName, fieldValue));
+		return (Entity) criteria.uniqueResult();
+	}
+	
 }

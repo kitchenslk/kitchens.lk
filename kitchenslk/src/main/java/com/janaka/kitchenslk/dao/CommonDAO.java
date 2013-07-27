@@ -87,4 +87,12 @@ public interface CommonDAO {
 	 * @throws Exception
 	 */
 	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap, Criterion criterion)throws Exception; 
+	
+	/**
+	 * @param class1
+	 * @param fieldName
+	 * @param fieldValue
+	 * @return
+	 */
+	public <Entity> Entity getEntityByGivenFieldValue(Class<Entity> class1, String fieldName,	String fieldValue)throws Exception; 
 }

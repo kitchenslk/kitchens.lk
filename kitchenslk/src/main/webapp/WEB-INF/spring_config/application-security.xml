@@ -1,87 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<security:global-method-security secured-annotations="enabled"></security:global-method-security>
+	<security:global-method-security
+		secured-annotations="enabled"></security:global-method-security>
+
+	<security:http auto-config="false" use-expressions="true"	entry-point-ref="myAuthenticationEntryPoint">
 	
-	<security:http auto-config="false" use-expressions="true" entry-point-ref="myAuthenticationEntryPoint" >
 		<security:intercept-url pattern="/images/**" access="permitAll" />
-  		<security:intercept-url pattern="/style/**" access="permitAll" />
-  		<security:intercept-url pattern="/resources/**" access="permitAll" />		
-  		<security:intercept-url pattern="/js/**" access="permitAll" />
-  			
-  		<security:intercept-url pattern="/index.jsp" access="permitAll"/>                
-		<security:intercept-url pattern="/login.htm" access="permitAll"/>	
-		<security:intercept-url pattern="/socialauth.htm" access="permitAll"/>
-  		<security:intercept-url pattern="/login/**" access="permitAll"/>	
-  	 
-  		  			
-		<security:intercept-url pattern="/*" access="permitAll"  />
-		
-				
+		<security:intercept-url pattern="/style/**"	access="permitAll" />
+		<security:intercept-url pattern="/resources/**" access="permitAll" />
+		<security:intercept-url pattern="/js/**" access="permitAll" />
+
+		<security:intercept-url pattern="/index.jsp" access="permitAll" />
+		<security:intercept-url pattern="/login.htm" access="permitAll" />
+		<security:intercept-url pattern="/socialauth.htm" access="permitAll" />
+		<security:intercept-url pattern="/login/**"	access="permitAll" />
+
+
+		<security:intercept-url pattern="/*" access="hasRole('ROLE_USER')" />
+
 		<security:custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-   	 	<security:custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
 		
-		<security:logout invalidate-session="true"/>
-		
-		<security:session-management session-authentication-strategy-ref="sas" >
-		</security:session-management>	
-		
-		<security:access-denied-handler error-page="/login/accessdenied.htm"/>
+		<security:custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
+
 		<security:logout invalidate-session="true" />
-	</security:http>	
-	
-	 <!-- Use a SHA encoder since the user's passwords are stored as SHA in the database -->
-	 <beans:bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder"/>
-	
-	 
-	 <!-- A custom service where Spring will retrieve users and their corresponding access levels  -->
-	 <beans:bean id="customUserDetailsService" class="com.janaka.kitchenslk.service.CustomUserDetailsServiceImpl"/>
-	 
-	 <!-- A custom Login Success Handler  -->
-	 <beans:bean id="loginSuccessHandler" class="com.janaka.kitchenslk.util.LoginSuccessHandler"/>
-	 
-	 <!-- A custom Login Failure Handler  -->
-	 <beans:bean id="loginFailureHandler" class="com.janaka.kitchenslk.util.LoginFailureHandler"/>
-	 
-	 <beans:bean id="concurrencyFilter"
-      class="org.springframework.security.web.session.ConcurrentSessionFilter">
-    <beans:property name="sessionRegistry" ref="sessionRegistry" />
-    <beans:property name="expiredUrl" value="/login.htm" />
-  </beans:bean>
-  
-  <beans:bean id="myAuthenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-  	<beans:property name="loginFormUrl" value="/login.htm"></beans:property>
-  </beans:bean>
 
-  <beans:bean id="myAuthFilter"
-      class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
-     	<beans:property name="authenticationSuccessHandler" ref="loginSuccessHandler"></beans:property>
-     	<beans:property name="authenticationFailureHandler" ref="loginFailureHandler"></beans:property>
-    	<beans:property name="sessionAuthenticationStrategy" ref="sas" />
-    	<beans:property name="authenticationManager" ref="authenticationManager" />
-  </beans:bean>
-  
-  
-  <!-- Declare an authentication-manager to use a custom userDetailsService -->
-	 <security:authentication-manager alias="authenticationManager">
-	         <security:authentication-provider user-service-ref="customUserDetailsService">
-	           <security:password-encoder ref="passwordEncoder"/>
-	         </security:authentication-provider>
-	 </security:authentication-manager>
-  
-  <beans:bean id="sas" 
-      class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
-    <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
-    <beans:property name="maximumSessions" value="1" />
-  </beans:bean>
+		<security:session-management session-authentication-strategy-ref="sas"></security:session-management>
 
-  <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
-	
+		<security:access-denied-handler	error-page="/login/accessdenied.htm" />
+		
+		<security:logout invalidate-session="true" />
+		
+		<security:remember-me  services-ref="rememberMeServices" key="kitchenslkKey" />
+	</security:http>
+
+	<!-- Use a SHA encoder since the user's passwords are stored as SHA in the 
+		database -->
+	<beans:bean	class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"	id="passwordEncoder" />
+
+	<beans:bean id="rememberMeServices"
+          class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
+        <beans:property name="tokenRepository" ref="customTokenRepository" />
+        <beans:property name="userDetailsService" ref="customUserDetailsService" />
+        <beans:property name="key" value="kitchenslkKey" />
+    </beans:bean>
+    
+    <beans:bean id="rememberMeAuthenticationProvider" class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+    	<beans:property name="key" value="kitchenslkKey"/>
+	</beans:bean>
+    
+    <!-- A custom service where Spring will retrieve users and their corresponding 
+		access levels -->
+	<beans:bean id="customTokenRepository" class="com.janaka.kitchenslk.service.CustomTokenRepositoryImpl" />
+
+	<!-- A custom service where Spring will retrieve users and their corresponding 
+		access levels -->
+	<beans:bean id="customUserDetailsService"  class="com.janaka.kitchenslk.service.CustomUserDetailsServiceImpl" />
+
+	<!-- A custom Login Success Handler -->
+	<beans:bean id="loginSuccessHandler" class="com.janaka.kitchenslk.util.LoginSuccessHandler" >
+	</beans:bean>
+
+	<!-- A custom Login Failure Handler -->
+	<beans:bean id="loginFailureHandler" class="com.janaka.kitchenslk.util.LoginFailureHandler" ></beans:bean>
+
+	<beans:bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<beans:property name="sessionRegistry" ref="sessionRegistry" />
+		<beans:property name="expiredUrl" value="/login.htm" />
+	</beans:bean>
+
+	<beans:bean id="myAuthenticationEntryPoint"	class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/login.htm"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="myAuthFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<beans:property name="authenticationSuccessHandler"	ref="loginSuccessHandler"></beans:property>
+		<beans:property name="authenticationFailureHandler"	ref="loginFailureHandler"></beans:property>
+		<beans:property name="sessionAuthenticationStrategy" ref="sas" />
+		 <beans:property name="rememberMeServices" ref="rememberMeServices" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+
+
+	<!-- Declare an authentication-manager to use a custom userDetailsService -->
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider	user-service-ref="customUserDetailsService" >
+			<security:password-encoder ref="passwordEncoder" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+	<beans:bean id="sas" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+		<beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+		<beans:property name="maximumSessions" value="1" />
+	</beans:bean>
+
+	<beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+
 </beans:beans>

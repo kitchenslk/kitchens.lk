@@ -6,6 +6,7 @@ import java.util.Map;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
 
+import com.janaka.kitchenslk.entity.Token;
 import com.janaka.kitchenslk.enums.Status;
 
 /**
@@ -87,6 +88,15 @@ public interface CommonService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap, Criterion criterion)throws Exception; 
+	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap, Criterion criterion)throws Exception;
+
+	/**
+	 * @param class1
+	 * @param fieldName
+	 * @param fieldValue
+	 * @return
+	 * @throws Exception 
+	 */
+	public <Entity> Entity getEntityByGivenFieldValue(Class<Entity> class1, String fieldName,	String fieldValue) throws Exception; 
 
 }

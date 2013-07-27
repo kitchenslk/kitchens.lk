@@ -19,7 +19,7 @@
         <put-attribute name="body" value="" />       
     </definition>
     
-     <definition name="master.definition"  template="/WEB-INF/jsp/layouts/masterLayout.jsp">
+     <definition name="superAdmin.definition"  template="/WEB-INF/jsp/layouts/superAdminLayout.jsp">
         <put-attribute name="title" value="" />        
         <put-attribute name="body" value="" />       
     </definition>
@@ -49,27 +49,42 @@
         <put-attribute name="title" value="authSuccess" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/authSuccess.jsp" />
     </definition>
+    
+    <definition name="confirmRegistration" extends="login.definition">
+        <put-attribute name="title" value="authSuccess" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/loginRegistration/confirmRegistration.jsp" />
+    </definition>
 
     <!-- MERCHANT -->
+    <definition name="merchantdashboard" extends="merchant.definition">
+        <put-attribute name="title" value="Item List" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/merchantDashboard.jsp" />
+    </definition>    
+   
     <definition name="listItems" extends="merchant.definition">
         <put-attribute name="title" value="Item List" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/listItems.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/items/listItems.jsp" />
     </definition>
     
     <definition name="addItem" extends="merchant.definition">
         <put-attribute name="title" value="Add Item" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/addItem.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/items/addItem.jsp" />
     </definition>
     
-     <!-- MASTER -->
-    <definition name="listAttributes" extends="master.definition">
+     <!-- SUPER ADMIN -->
+     <definition name="superadmindashboard" extends="superAdmin.definition">
+        <put-attribute name="title" value="Super Admin Dashboard" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/superAdmin/superAdminDashboard.jsp" />
+    </definition>     
+     
+    <definition name="listAttributes" extends="superAdmin.definition">
         <put-attribute name="title" value="Attribute List" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/master/listAttributes.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/superAdmin/master/listAttributes.jsp" />
     </definition>
     
-    <definition name="addAttribute" extends="master.definition">
+    <definition name="addAttribute" extends="superAdmin.definition">
         <put-attribute name="title" value="Add Attribute" />
-        <put-attribute name="body" value="/WEB-INF/jsp/contents/master/addAttribute.jsp" />
+        <put-attribute name="body" value="/WEB-INF/jsp/contents/superAdmin/master/addAttribute.jsp" />
     </definition>
     
  

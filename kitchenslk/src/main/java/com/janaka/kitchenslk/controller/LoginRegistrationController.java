@@ -14,6 +14,7 @@ import org.brickred.socialauth.SocialAuthManager;
 import org.brickred.socialauth.spring.bean.SocialAuthTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,20 +45,30 @@ public class LoginRegistrationController {
 		return "login";
 	}
 	
+	//for the explicit get login page
+	@RequestMapping(value="/getlogin",method=RequestMethod.GET)
+	public ModelAndView getExplicitLoginPage(HttpServletRequest request){
+		ModelMap map=new ModelMap();
+		map.put("redirectTo", "dashboardredirect.htm");
+		return new ModelAndView("login",map);
+	}	
+	
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public ModelAndView getSignUpPage(HttpServletRequest request){		
 		return new ModelAndView("signUp","tempSystemUser", new TempSystemUser());
 	}
 	
 	@RequestMapping(value="/register", method=RequestMethod.POST)
-	public String signUpUser(HttpServletRequest request,@ModelAttribute("tempSystemUser") TempSystemUser tempSystemUser){
+	public ModelAndView signUpUser(HttpServletRequest request,@ModelAttribute("tempSystemUser") TempSystemUser tempSystemUser){
+		ModelMap map=new ModelMap();
 		try {
-			systemUserService.registerUser(tempSystemUser);
+			map.put("tempSystemUser", tempSystemUser);
+			tempSystemUser=systemUserService.registerUser(tempSystemUser);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "signUp";
+		return new ModelAndView("confirmRegistration",map);
 	}
 	
 	@RequestMapping(value="/confirmtempuser", method=RequestMethod.GET)
@@ -68,7 +79,7 @@ public class LoginRegistrationController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "signUp";
+		return "redirect:/login.htm";
 	}
 	
 	@RequestMapping(value="/accessdenied", method=RequestMethod.GET)

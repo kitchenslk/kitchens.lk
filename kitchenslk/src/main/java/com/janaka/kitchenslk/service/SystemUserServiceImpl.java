@@ -65,7 +65,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 	}
 	
 	@Override
-	public void registerUser(TempSystemUser tempSystemUser) throws Exception {
+	public TempSystemUser registerUser(TempSystemUser tempSystemUser) throws Exception {
 		tempSystemUser.setRecordId(CommonFunctions.generateTempUserRecordId(tempSystemUser.getTempPassword()));
 		tempSystemUser.setTempPassword(encryptionUtil.encrypt(tempSystemUser.getTempPassword()));
 		tempSystemUser.setEncryptedTempUserName(encryptionUtil.encrypt(tempSystemUser.getTempUserName()));
@@ -78,6 +78,7 @@ public class SystemUserServiceImpl implements SystemUserService {
 		if(!(id==0)){
 			emailMessageUtil.prepareAndSendTempNotificationEmail(tempNotification);
 		}
+		return tempSystemUser;
 	}
 	
 	@Override

@@ -63,5 +63,10 @@ public class CommonServiceImpl implements CommonService{
 	public List<Map<String, Object>> listGivenFieldsByGivenCriteria(Class classz,Map<String,String> retrivingFieldMap,Criterion criterion)throws Exception {
 		return commonDAO.listGivenFieldsByGivenCriteria(classz,retrivingFieldMap,criterion);
 	}
+	
+	@Override
+	public <Entity> Entity getEntityByGivenFieldValue(Class<Entity> class1,	String fieldName, String fieldValue)throws Exception {
+		return commonDAO.getEntityByGivenFieldValue(class1,fieldName, fieldValue);
+	}
 
 }

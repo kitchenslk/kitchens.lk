@@ -47,7 +47,7 @@
 	<div id="dark_box"></div>
 	<div id="light_box_login">
 
-		<form:form id="form2" name="form2" method="post" action="j_spring_security_check">
+		<form:form id="form2" name="form2" method="post" action="/j_spring_security_check">
 			<table width="458px" align="center" cellpadding="0" cellspacing="0" style="margin-top: 15px;">
 
 				<tr>
@@ -72,6 +72,12 @@
 					<td align="left" valign="middle">&nbsp;</td>
 				</tr>
 				<tr>
+					<td colspan="2">
+						<label for="j_remember">Remember Me</label>
+               			<input id="j_remember" name="_spring_security_remember_me" type="checkbox" />
+					</td>
+				</tr>
+				<tr>
 					<td colspan="2" valign="top" align="right">
 					<input name="button2" type="submit" class="login_btn" id="button2" style="font-size: 18px;" value="Login" /></td>
 				</tr>
@@ -82,3 +88,5 @@
 		</c:if>
 	</div>
 </div>
+<h3 align="center">---- Or Create a new account ------</h3>
+<div><a href="<c:url value="login/register.htm" />">Register</a></div>

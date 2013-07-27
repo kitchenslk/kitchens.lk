@@ -33,9 +33,10 @@ public interface SystemUserService {
 
 	/**
 	 * @param tempSystemUser
+	 * @return TODO
 	 * @throws Exception
 	 */
-	public void registerUser(TempSystemUser tempSystemUser)throws Exception;
+	public TempSystemUser registerUser(TempSystemUser tempSystemUser)throws Exception;
 
 	/**
 	 * @param encryptedUserName

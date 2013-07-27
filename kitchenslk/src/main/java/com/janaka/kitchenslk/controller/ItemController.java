@@ -33,7 +33,7 @@ import com.janaka.kitchenslk.springeditor.AttributeEditor;
  * Project	: kitchenslk
  */
 @Controller("itemController")
-@RequestMapping(value="/items")
+@RequestMapping(value="/merchant")
 public class ItemController {
 	
 	@Autowired
@@ -53,7 +53,7 @@ public class ItemController {
 	}
 	
 	
-	@RequestMapping(method=RequestMethod.GET)
+	@RequestMapping(value="/items", method=RequestMethod.GET)
 	public ModelAndView getItemList(HttpServletRequest request){		
 		ModelMap map=new ModelMap();
 		try {
@@ -91,7 +91,7 @@ public class ItemController {
 				System.out.println(itemAttributeValue.getItemAttributeValues());
 			}
 		}
-		return "redirect:/items.htm";
+		return "redirect:merchant/items.htm";
 	}
 
 }

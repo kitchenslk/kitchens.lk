@@ -33,7 +33,7 @@ import com.janaka.kitchenslk.enums.UserRoleType;
 public class UserRole implements GrantedAuthority, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private long userRoleId;
+	private int userRoleId;
 	private UserRoleType userRoleType;
 	private int versionId;
 	
@@ -47,11 +47,10 @@ public class UserRole implements GrantedAuthority, Serializable {
 	@Column(name = "USER_ROLE_ID")
 	@SequenceGenerator(name = "idsequence", sequenceName = "user_role_id", allocationSize = 1, initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idsequence")
-	public long getUserRoleId() {
+	public int getUserRoleId() {
 		return userRoleId;
 	}
-
-	public void setUserRoleId(long userRoleId) {
+	public void setUserRoleId(int userRoleId) {
 		this.userRoleId = userRoleId;
 	}
 
@@ -60,7 +59,6 @@ public class UserRole implements GrantedAuthority, Serializable {
 	public UserRoleType getUserRoleType() {
 		return userRoleType;
 	}
-
 	public void setUserRoleType(UserRoleType userRoleType) {
 		this.userRoleType = userRoleType;
 	}

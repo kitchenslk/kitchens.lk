@@ -48,8 +48,9 @@ public class Item implements Serializable {
 	private long itemId;
 	private String itemName;
 	private String itemDescription;
+	private UploadedFile itemImage;
 	private Menu menu;
-	private List<ItemAttribute> itemAttributes;
+	private List<ItemType> itemTypes;
 	private Status status;
 	private int versionId;
 	private CommonDomainProperty commonDomainProperty;
@@ -83,14 +84,24 @@ public class Item implements Serializable {
 		this.itemDescription = itemDescription;
 	}
 	
-			
-	@OneToMany(mappedBy="item")
-	@Cascade(CascadeType.SAVE_UPDATE)
-	public List<ItemAttribute> getItemAttributes() {
-		return itemAttributes;
+	
+	@ManyToOne()
+	@Cascade(CascadeType.ALL)
+	@JoinColumn(name="ITEM_IMAGE_ID")
+	public UploadedFile getItemImage() {
+		return itemImage;
 	}
-	public void setItemAttributes(List<ItemAttribute> itemAttributes) {
-		this.itemAttributes = itemAttributes;
+	public void setItemImage(UploadedFile itemImage) {
+		this.itemImage = itemImage;
+	}
+	
+	@OneToMany(mappedBy="item")
+	@Cascade(CascadeType.ALL)
+	public List<ItemType> getItemTypes() {
+		return itemTypes;
+	}
+	public void setItemTypes(List<ItemType> itemTypes) {
+		this.itemTypes = itemTypes;
 	}
 	
 	
@@ -173,9 +184,9 @@ public class Item implements Serializable {
 	
 	private List<Map<String,Object>> constructItemAttributes() {
 		List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
-		if(!(itemAttributes==null || itemAttributes.isEmpty())){
-			for (ItemAttribute itemAttribute : itemAttributes) {
-				list.add(itemAttribute.toBasicMap());
+		if(!(itemTypes==null || itemTypes.isEmpty())){
+			for (ItemType itemType : itemTypes) {
+				list.add(itemType.toCompleteMapWithoutParents());
 			}	
 		}		
 		return list;

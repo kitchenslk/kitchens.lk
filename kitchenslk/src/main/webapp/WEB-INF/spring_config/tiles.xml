@@ -56,7 +56,7 @@
     </definition>
 
     <!-- MERCHANT -->
-    <definition name="merchantdashboard" extends="merchant.definition">
+    <definition name="merchantDashboard" extends="merchant.definition">
         <put-attribute name="title" value="Item List" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/merchant/merchantDashboard.jsp" />
     </definition>    
@@ -72,7 +72,7 @@
     </definition>
     
      <!-- SUPER ADMIN -->
-     <definition name="superadmindashboard" extends="superAdmin.definition">
+     <definition name="superAdminDashboard" extends="superAdmin.definition">
         <put-attribute name="title" value="Super Admin Dashboard" />
         <put-attribute name="body" value="/WEB-INF/jsp/contents/superAdmin/superAdminDashboard.jsp" />
     </definition>     

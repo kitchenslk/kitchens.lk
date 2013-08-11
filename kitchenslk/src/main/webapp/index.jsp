@@ -6,6 +6,10 @@
 
 	<li><a href="<c:url value="imageUpload.htm" />">File Upload</a></li>
 	
+	<li><a href="<c:url value="superadmindashboard.htm" />">Super Admin</a></li>
+	
+	<li><a href="<c:url value="merchantdashboard.htm" />">Merchant</a></li>
+	
 	<li><a href="login/getlogin.htm">Login</a></li>
 	
 </ul>

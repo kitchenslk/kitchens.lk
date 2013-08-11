@@ -35,11 +35,14 @@ public class CustomTokenRepositoryImpl implements PersistentTokenRepository {
 		Token token = null;
 		try {
 			token = commonService.getEntityByGivenFieldValue(Token.class,"series", seriesId);
+			if(! (token==null)){
+				return new PersistentRememberMeToken(token.getUsername(), token.getSeries(), token.getTokenValue(), token.getDate());
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new PersistentRememberMeToken(token.getUsername(), token.getSeries(), token.getTokenValue(), token.getDate());
+		return null;
 	}
 
 	@Override
@@ -47,7 +50,9 @@ public class CustomTokenRepositoryImpl implements PersistentTokenRepository {
 		Token token = null;
 		try {
 			token = commonService.getEntityByGivenFieldValue(Token.class,"series", seriesId);
-			commonService.deleteEntity(token);
+			if(!(token==null)){
+				commonService.deleteEntity(token);
+			}			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,9 +65,11 @@ public class CustomTokenRepositoryImpl implements PersistentTokenRepository {
 		Token token = null;
 		try {
 			token = commonService.getEntityByGivenFieldValue(Token.class,"series", seriesId);
-			token.setTokenValue(seriesId);
-			token.setDate(lastUsed);
-			commonService.deleteEntity(token);
+			if(!(token==null)){
+				token.setTokenValue(seriesId);
+				token.setDate(lastUsed);
+				commonService.updateEntity(token);
+			}			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

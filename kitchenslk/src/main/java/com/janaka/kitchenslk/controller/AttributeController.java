@@ -85,7 +85,7 @@ public class AttributeController {
 			message=ApplicationConstants.SYSTEM_ERROR;
 			e.printStackTrace();
 		}
-		return "redirect:superadmin/attributes.htm?message=" + message;
+		return "redirect:attributes.htm?message=" + message;
 	}
 	
 	@RequestMapping(value="/listattributebyterm", method=RequestMethod.GET)

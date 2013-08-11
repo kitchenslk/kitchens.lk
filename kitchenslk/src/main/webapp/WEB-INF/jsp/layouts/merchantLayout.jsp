@@ -12,11 +12,11 @@
 
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
    <title>Form Wizard</title>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-    <script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>   
-    <script type="text/javascript" src="<c:url value="js/ajaxupload.js"/>"></script> 
+    <link rel="stylesheet" href='<c:url  value="/css/jquery-ui.min.css" />' />
+    <script type="text/javascript" src="<c:url  value="/js/jquery-1.9.1.min.js" />"></script>
+    <script type="text/javascript" src="<c:url  value="/js/jquery-ui.min.js" />"></script>
+    <script type="text/javascript" src="<c:url  value="/js/jquery.tmpl.min.js" />">"></script>   
+    <script type="text/javascript" src="<c:url value="/js/ajaxupload.js"/>"></script> 
     
    
 </head>

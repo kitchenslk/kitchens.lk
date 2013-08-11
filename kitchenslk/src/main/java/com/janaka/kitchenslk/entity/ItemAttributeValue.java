@@ -1,9 +1,7 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.AttributeOverride;
@@ -19,7 +17,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -49,10 +46,11 @@ public class ItemAttributeValue implements Serializable{
 	
 	private int itemAttributeValueId;
 	private String value;
-	private ItemAttribute itemAttribute;
-	private ItemAttributeValue parentItemAttributeValue;
-	private List<ItemAttributeValue> itemAttributeValues;
-	private String itemAttributeValueDescription;
+	private Attribute attribute;
+	private ItemType itemType;
+	//private ItemAttributeValue parentItemAttributeValue;
+	//private List<ItemAttributeValue> itemAttributeValues;
+	private String description;
 	private Status status;
 	private int versionId;
 	private CommonDomainProperty commonDomainProperty;
@@ -69,13 +67,22 @@ public class ItemAttributeValue implements Serializable{
 		this.itemAttributeValueId = itemAttributeValueId;
 	}
 	
-	@Column(name="ITEM_ATTRIBUTE_VALUE_DESCRIPTION", length=5000)
-	public String getItemAttributeValueDescription() {
-		return itemAttributeValueDescription;
+	@Column(name="DESCRIPTION", length=5000)
+	public String getDescription() {
+		return description;
 	}
-	public void setItemAttributeValueDescription(
-			String itemAttributeValueDescription) {
-		this.itemAttributeValueDescription = itemAttributeValueDescription;
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	@ManyToOne(optional=false, fetch=FetchType.LAZY)
+	@JoinColumn(name="ITEM_TYPE_ID")
+	@Cascade(CascadeType.MERGE)	
+	public ItemType getItemType() {
+		return itemType;
+	}	
+	public void setItemType(ItemType itemType) {
+		this.itemType = itemType;
 	}
 	
 	
@@ -88,36 +95,36 @@ public class ItemAttributeValue implements Serializable{
 	}
 	
 	@ManyToOne(optional=false, fetch=FetchType.LAZY)
-	@JoinColumn(name="ITEM_ATTRIBUTE_ID")
+	@JoinColumn(name="ATTRIBUTE_ID")
 	@Cascade(CascadeType.MERGE)	
-	public ItemAttribute getItemAttribute() {
-		return itemAttribute;
+	public Attribute getAttribute() {
+		return attribute;
 	}
-	public void setItemAttribute(ItemAttribute itemAttribute) {
-		this.itemAttribute = itemAttribute;
-	}
-	
-	
-	@ManyToOne(optional=true, fetch=FetchType.LAZY)
-	@JoinColumn(name="PARENT_ITEM_ATTRIBUTE_VALUE_ID")
-	@Cascade(CascadeType.MERGE)	
-	public ItemAttributeValue getParentItemAttributeValue() {
-		return parentItemAttributeValue;
-	}
-	public void setParentItemAttributeValue(ItemAttributeValue parentItemAttributeValue) {
-		this.parentItemAttributeValue = parentItemAttributeValue;
+	public void setAttribute(Attribute attribute) {
+		this.attribute = attribute;
 	}
 	
 	
-	
-	@OneToMany(mappedBy="parentItemAttributeValue", fetch=FetchType.LAZY)
-	@Cascade(CascadeType.SAVE_UPDATE)
-	public List<ItemAttributeValue> getItemAttributeValues() {
-		return itemAttributeValues;
-	}
-	public void setItemAttributeValues(List<ItemAttributeValue> itemAttributeValues) {
-		this.itemAttributeValues = itemAttributeValues;
-	}
+//	@ManyToOne(optional=true, fetch=FetchType.LAZY)
+//	@JoinColumn(name="PARENT_ITEM_ATTRIBUTE_VALUE_ID")
+//	@Cascade(CascadeType.MERGE)	
+//	public ItemAttributeValue getParentItemAttributeValue() {
+//		return parentItemAttributeValue;
+//	}	
+//	public void setParentItemAttributeValue(ItemAttributeValue parentItemAttributeValue) {
+//		this.parentItemAttributeValue = parentItemAttributeValue;
+//	}
+//	
+//	
+//	
+//	@OneToMany(mappedBy="parentItemAttributeValue", fetch=FetchType.LAZY)
+//	@Cascade(CascadeType.SAVE_UPDATE)
+//	public List<ItemAttributeValue> getItemAttributeValues() {
+//		return itemAttributeValues;
+//	}
+//	public void setItemAttributeValues(List<ItemAttributeValue> itemAttributeValues) {
+//		this.itemAttributeValues = itemAttributeValues;
+//	}
 	
 	
 	@Enumerated(EnumType.STRING)
@@ -173,7 +180,7 @@ public class ItemAttributeValue implements Serializable{
 		Map<String, Object> map=new HashMap<String, Object>();
 		map.put("itemAttributeValueId", itemAttributeValueId);
 		map.put("value", value);
-		map.put("itemAttributeValueDescription", itemAttributeValueDescription);
+		map.put("description", description);
 		map.put("status", status);
 		if(!(commonDomainProperty==null)){
 			map.put("commonDomainProperty", commonDomainProperty.toBasicMap());
@@ -183,33 +190,33 @@ public class ItemAttributeValue implements Serializable{
 	
 	public Map<String, Object> toCompleteMapWithoutParents() {
 		Map<String, Object> map=this.toBasicMap();
-		if(!(parentItemAttributeValue==null)){
-			map.put("parentItemAttributeValue", parentItemAttributeValue.toBasicMap());
-		}
-		map.put("itemAttributeValues", constructChildItemAttributeValueList());		
+//		if(!(parentItemAttributeValue==null)){
+//			map.put("parentItemAttributeValue", parentItemAttributeValue.toBasicMap());
+//		}
+		//map.put("itemAttributeValues", constructChildItemAttributeValueList());		
 		return map;
 	}
 	
 	public Map<String, Object> toCompleteMap() {
 		Map<String, Object> map=this.toCompleteMapWithoutParents();		
-		if(!(itemAttribute==null)){
-			map.put("itemAttribute", itemAttribute.toBasicMap());
+		if(!(attribute==null)){
+			map.put("itemAttribute", attribute.toBasicMap());
 		}
-		if(!(parentItemAttributeValue==null)){
-			map.put("parentItemAttributeValue", parentItemAttributeValue.toBasicMap());
-		}
+//		if(!(parentItemAttributeValue==null)){
+//			map.put("parentItemAttributeValue", parentItemAttributeValue.toBasicMap());
+//		}
 		return map;
 	}
 	
-	public List<Map<String,Object>> constructChildItemAttributeValueList(){
-		if(!(itemAttributeValues==null|| itemAttributeValues.isEmpty())){
-			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
-			for (ItemAttributeValue attributeValue : itemAttributeValues) {
-				list.add(attributeValue.toBasicMap());
-			}
-			return list;
-		}
-		return null;
-	}
+//	public List<Map<String,Object>> constructChildItemAttributeValueList(){
+//		if(!(itemAttributeValues==null|| itemAttributeValues.isEmpty())){
+//			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+//			for (ItemAttributeValue attributeValue : itemAttributeValues) {
+//				list.add(attributeValue.toBasicMap());
+//			}
+//			return list;
+//		}
+//		return null;
+//	}
 
 }

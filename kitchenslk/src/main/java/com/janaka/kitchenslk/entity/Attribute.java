@@ -1,9 +1,7 @@
 package com.janaka.kitchenslk.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.AttributeOverride;
@@ -16,15 +14,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -46,7 +41,6 @@ public class Attribute implements Serializable {
 	private long attributeId;
 	private String attributeName;
 	private String attributeDescription;
-	private List<ItemAttribute> itemAttributes;
 	private Status status;
 	private int versionId;
 	private CommonDomainProperty commonDomainProperty;
@@ -79,14 +73,6 @@ public class Attribute implements Serializable {
 	}
 	
 	
-	@OneToMany(mappedBy="attribute")
-	@Cascade(CascadeType.SAVE_UPDATE)
-	public List<ItemAttribute> getItemAttributes() {
-		return itemAttributes;
-	}
-	public void setItemAttributes(List<ItemAttribute> itemAttributes) {
-		this.itemAttributes = itemAttributes;
-	}
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "STATUS")
@@ -148,16 +134,16 @@ public class Attribute implements Serializable {
 		return map;
 	}
 	
-	public List<Map<String,Object>> constructitemAttributeList(){
-		if(!(itemAttributes==null|| itemAttributes.isEmpty())){
-			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
-			for (ItemAttribute attribute : itemAttributes) {
-				list.add(attribute.toBasicMap());
-			}
-			return list;
-		}
-		return null;
-	}
+//	public List<Map<String,Object>> constructitemAttributeList(){
+//		if(!(itemAttributes==null|| itemAttributes.isEmpty())){
+//			List<Map<String,Object>> list=new ArrayList<Map<String,Object>>();
+//			for (ItemAttribute attribute : itemAttributes) {
+//				list.add(attribute.toBasicMap());
+//			}
+//			return list;
+//		}
+//		return null;
+//	}
 
 
 }

@@ -38,6 +38,8 @@
 		<security:logout invalidate-session="true" />
 		
 		<security:remember-me  services-ref="rememberMeServices" key="kitchenslkKey" />
+		
+		
 	</security:http>
 
 	<!-- Use a SHA encoder since the user's passwords are stored as SHA in the 
